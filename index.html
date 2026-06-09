@@ -93,6 +93,7 @@ body{background:#fff;padding:0;}
 #wrap{box-shadow:none;border-radius:0;max-width:100%}
 .sec-body{display:block!important}
 .shield{display:none!important}
+#rhAdjBox,#rhAdjBoxAbs{display:none!important}
 #sigCArea,#sigRArea{background:#fff!important;min-height:90px;}
 #sigCArea svg,#sigRArea svg{background:#fff!important;}
 #sigCArea svg rect,#sigRArea svg rect{fill:#fff!important;}
@@ -322,15 +323,43 @@ function isSec(id){return ge('body'+id).classList.contains('open')}
 function showEvt(v){ge('evtDet').classList.toggle('show',v);if(v){ge('decDet').classList.remove('show');ge('decDet').style.display='none';}}
 function showDeces(v){var dd=ge('decDet');if(dd){dd.style.display=v?'block':'none';dd.classList.toggle('show',v);}}
 function toggleAR(){var cb=ge('chkAR');var box=ge('arDateBox');if(box)box.style.display=(cb&&cb.checked)?'flex':'none';}
+function setRH(id,val){
+  var el=ge(id);if(!el)return;
+  el.removeAttribute('readonly');el.style.pointerEvents='auto';
+  if(el.type==='date'||el.getAttribute('data-orig-type')==='date'){el.type='text';}
+  el.value=val;
+}
 function applyRHAdj(){
-  var cpD=gv('rhCpD'),cpF=gv('rhCpF'),absH=gv('rhAbsH'),absJ=gv('rhAbsJ');
-  function setRH(id,val){var el=ge(id);if(!el)return;el.removeAttribute('readonly');el.style.pointerEvents='auto';el.type='text';el.value=val;}
+  var cpD=gv('rhCpD'),cpF=gv('rhCpF'),cpN=gv('rhCpN').trim();
   if(cpD)setRH('cpD',fD(cpD));
   if(cpF)setRH('cpF',fD(cpF));
-  if(cpD&&cpF){var r=countJ(cpD,cpF);ge('jrN').textContent=r.c;ge('jrD').textContent=r.fe?'dont '+r.fe+' jour(s) ferié(s)':'';ge('jrBlk').style.display='flex';}
+  if(cpD&&cpF){
+    if(cpN){
+      // Override manuel du nombre de jours
+      ge('jrN').textContent=cpN;ge('jrD').textContent='(ajusté RH)';ge('jrBlk').style.display='flex';
+    } else {
+      var r=countJ(cpD,cpF);
+      ge('jrN').textContent=r.c;ge('jrD').textContent=r.fe?'dont '+r.fe+' jour(s) ferié(s)':'';ge('jrBlk').style.display='flex';
+    }
+  } else if(cpN){
+    ge('jrN').textContent=cpN;ge('jrD').textContent='(ajusté RH)';ge('jrBlk').style.display='flex';
+  }
+  toast('Ajustements CP appliqués',3000);
+}
+function applyRHAdjAbs(){
+  var motif=gv('rhAbsMotif'),absD=gv('rhAbsD'),absF=gv('rhAbsF'),absH=gv('rhAbsH'),absJ=gv('rhAbsJ');
+  if(motif){
+    // Mettre à jour le badge motif affiché
+    var badge=document.querySelector('.sec-body .sec-ttl,#secABS .sec-body [style*="background:var(--g)"]');
+    var motifBadges=document.querySelectorAll('#secABS [style*="background:var(--g)"]');
+    motifBadges.forEach(function(el){el.textContent=motif;});
+    var evtField=ge('evtM');if(evtField){setRH('evtM',motif);}
+  }
+  if(absD)setRH('absD',fD(absD));
+  if(absF)setRH('absF',fD(absF));
   if(absH)setRH('absH',absH);
   if(absJ)setRH('absJ',absJ);
-  toast('Ajustements appliqués — pensez à télécharger le PDF mis à jour',4000);
+  toast('Ajustements absence appliqués',3000);
 }
 function calcJ(){
   var d=gv('cpD'),f=gv('cpF');
@@ -682,7 +711,9 @@ async function genPDF(asBlob){
   var wCP=bCP.classList.contains('open'),wAB=bAB.classList.contains('open');
   bCP.classList.add('open');bAB.classList.add('open');
   var sh=ge('shield');if(sh)sh.style.display='none';
-  // Masquer l'overlay iOS s'il est présent
+  // Masquer panneaux ajustement RH (hors #wrap mais cachés par sécurité)
+  var adjPanels=[ge('rhAdjBox'),ge('rhAdjBoxAbs')];
+  adjPanels.forEach(function(el){if(el)el.style.visibility='hidden'});
   var iosOverlay=document.getElementById('ios-rh-overlay');
   if(iosOverlay)iosOverlay.style.display='none';
   // Masquer modals et toasts
@@ -691,6 +722,9 @@ async function genPDF(asBlob){
   document.querySelectorAll('input[type="date"]').forEach(function(el){
     if(!el.value)return;saved.push({el:el,v:el.value});el.type='text';el.value=fD(el.value);
   });
+  // S'assurer que jrBlk est visible si jrN a du contenu
+  var jrBlk2=ge('jrBlk');var jrN2=ge('jrN');
+  if(jrBlk2&&jrN2&&jrN2.textContent&&jrN2.textContent!=='-')jrBlk2.style.display='flex';
   var res=null;
   try{
     // windowWidth:860 = largeur réelle du wrap, scale:1.2 pour tenir sur A4
@@ -709,6 +743,7 @@ async function genPDF(asBlob){
   }catch(err){saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});toast('Erreur PDF')}
   // Restaurer
   document.querySelectorAll('.modal,#toast,#sp').forEach(function(el){el.style.visibility='';});
+  adjPanels.forEach(function(el){if(el)el.style.visibility=''});
   if(iosOverlay)iosOverlay.style.display='';
   if(!wCP)bCP.classList.remove('open');if(!wAB)bAB.classList.remove('open');
   if(sh)sh.style.display='none';
@@ -930,7 +965,8 @@ document.addEventListener('DOMContentLoaded',function(){
     ge('bannerMsg').innerHTML='Demande signee — <button class="btn bgr" style="padding:6px 14px;font-size:12px" onclick="exportPDF()">Telecharger le PDF</button>';
     ge('btnDir').style.display='none';ge('btnRH').style.display='none';ge('btnPDF').style.display='';
       // Bouton ajustement RH
-      var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajuster dates/jours';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};var _bz=ge('btnZone'),_bp=ge('btnPDF');if(_bz&&_bp)_bz.insertBefore(adjBtn,_bp);else if(_bz)_bz.appendChild(adjBtn);
+      var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajustement congés payés';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};var _bz=ge('btnZone'),_bp=ge('btnPDF');if(_bz&&_bp)_bz.insertBefore(adjBtn,_bp);else if(_bz)_bz.appendChild(adjBtn);
+      var adjBtnAbs=document.createElement('button');adjBtnAbs.className='btn bol';adjBtnAbs.textContent='✏️ Ajuster l\u2019absence';adjBtnAbs.style.fontSize='12px';adjBtnAbs.onclick=function(){var ab=ge('rhAdjBoxAbs');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};if(_bz&&_bp)_bz.insertBefore(adjBtnAbs,_bp);else if(_bz)_bz.appendChild(adjBtnAbs);
     var sh=ge('shield');if(sh)sh.style.display='none';
     var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='none';}
     if(_rh.annuleRemplace){
@@ -1075,17 +1111,31 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 </script>
-<div id="rhAdjBox" style="display:none;max-width:900px;margin:10px auto 30px;background:#fff;border:2px solid var(--g);border-radius:8px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,.1)">
-  <div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:10px">✏️ Ajustement RH — Dates et jours (réservé RH)</div>
+<div id="rhAdjBox" style="display:none;max-width:900px;margin:10px auto 6px;background:#fff;border:2px solid var(--g);border-radius:8px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,.1)">
+  <div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:10px">✏️ Ajustement congés payés (réservé RH)</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
     <div class="fg"><label class="lbl">Nouveau premier jour non travaillé</label><input class="inp" type="date" id="rhCpD"></div>
     <div class="fg"><label class="lbl">Nouveau dernier jour non travaillé</label><input class="inp" type="date" id="rhCpF"></div>
+  </div>
+  <div style="margin-bottom:12px">
+    <div class="fg"><label class="lbl">Nombre de jours ouvrés (laisser vide = recalcul automatique)</label><input class="inp" id="rhCpN" placeholder="ex: 5" style="max-width:200px"></div>
+  </div>
+  <button class="btn bg" style="font-size:12px" onclick="applyRHAdj()">Appliquer les ajustements CP</button>
+</div>
+<div id="rhAdjBoxAbs" style="display:none;max-width:900px;margin:6px auto 30px;background:#fff;border:2px solid var(--g);border-radius:8px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,.1)">
+  <div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:10px">✏️ Ajustement autorisation d'absence (réservé RH)</div>
+  <div style="margin-bottom:10px">
+    <div class="fg"><label class="lbl">Motif</label><input class="inp" id="rhAbsMotif" placeholder="ex: Décès, Événement familial..."></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+    <div class="fg"><label class="lbl">Date début</label><input class="inp" type="date" id="rhAbsD"></div>
+    <div class="fg"><label class="lbl">Date fin</label><input class="inp" type="date" id="rhAbsF"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
     <div class="fg"><label class="lbl">Heures d'absence</label><input class="inp" id="rhAbsH" placeholder="ex: 7h"></div>
     <div class="fg"><label class="lbl">Nombre de jours</label><input class="inp" id="rhAbsJ" placeholder="ex: 1"></div>
   </div>
-  <button class="btn bg" style="font-size:12px" onclick="applyRHAdj()">Appliquer les ajustements</button>
+  <button class="btn bg" style="font-size:12px" onclick="applyRHAdjAbs()">Appliquer les ajustements absence</button>
 </div>
 </body>
 </html>
