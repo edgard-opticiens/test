@@ -725,11 +725,13 @@ async function genPDF(asBlob){
   // S'assurer que jrBlk est visible si jrN a du contenu
   var jrBlk2=ge('jrBlk');var jrN2=ge('jrN');
   if(jrBlk2&&jrN2&&jrN2.textContent&&jrN2.textContent!=='-')jrBlk2.style.display='flex';
-  var res=null;
+  // Nom pour le fichier PDF
+  var pdfNom=_rh?_rh.nom:(_md?_md.nom:gv('nom'));
+  var pdfPrenom=_rh?_rh.prenom:(_md?_md.prenom:gv('prenom'));
+  var res=null,errMsg=null;
   try{
-    // windowWidth:860 = largeur réelle du wrap, scale:1.2 pour tenir sur A4
     var cv=await html2canvas(ge('wrap'),{scale:1.2,useCORS:true,logging:false,windowWidth:860});
-    saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});
+    saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});saved=[];
     var img=cv.toDataURL('image/jpeg',.88);
     var P=window.jspdf.jsPDF;
     var margin=4,pageW=210,pageH=297,maxW=pageW-2*margin,maxH=pageH-2*margin;
@@ -739,14 +741,16 @@ async function genPDF(asBlob){
     var pdf=new P({orientation:'portrait',unit:'mm',format:'a4'});
     pdf.addImage(img,'JPEG',x,y,imgW,imgH);
     if(asBlob)res=pdf.output('blob');
-    else{pdf.save(('Demande_'+(_md?_md.prenom:gv('prenom'))+'_'+(_md?_md.nom:gv('nom'))+(_md?'_SIGNE':'')+'.pdf').replace(/\s/g,'-'));res=true}
-  }catch(err){saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});toast('Erreur PDF')}
-  // Restaurer
+    else{pdf.save(('Demande_'+pdfPrenom+'_'+pdfNom+'_SIGNE.pdf').replace(/\s/g,'-'));res=true;}
+  }catch(err){errMsg='Erreur PDF';}
+  // Restaurer dans tous les cas (finally implicite)
+  saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});
   document.querySelectorAll('.modal,#toast,#sp').forEach(function(el){el.style.visibility='';});
   adjPanels.forEach(function(el){if(el)el.style.visibility=''});
   if(iosOverlay)iosOverlay.style.display='';
   if(!wCP)bCP.classList.remove('open');if(!wAB)bAB.classList.remove('open');
   if(sh)sh.style.display='none';
+  if(errMsg)toast(errMsg);
   return res;
 }
 
