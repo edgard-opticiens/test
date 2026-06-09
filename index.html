@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demande de Conges - Edgard Opticiens</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--g:#C9A84C;--gl:#E8C96A;--gp:#F5EDD0;--dk:#1A1A1A;--md:#4A4A4A;--lt:#F9F7F2;--bd:#D8CBA8;--r:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#EEEBE3;min-height:100vh;padding:16px 10px 40px;color:var(--dk)}
+.banner{max-width:860px;margin:0 auto 10px;padding:9px 16px;border-radius:7px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bc{background:#E8F4E8;border:1.5px solid #27AE60;color:#1E7E34}
+.bd2{background:#FFF3CD;border:1.5px solid var(--g);color:#856404}
+.badge{padding:2px 9px;border-radius:10px;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+.bc .badge{background:#27AE60;color:#fff}.bd2 .badge{background:var(--g);color:#fff}
+.tb{max-width:860px;margin:0 auto 12px;display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 17px;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.bg{background:var(--g);color:#fff}.bg:hover{background:var(--gl)}
+.bdk{background:var(--dk);color:#fff}.bdk:hover{background:#333}
+.bgr{background:#27AE60;color:#fff}.bgr:hover{background:#219A52}
+.bol{background:transparent;border:2px solid var(--g);color:var(--g)}.bol:hover{background:var(--gp)}
+#wrap{max-width:860px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 6px 30px rgba(0,0,0,.12);overflow:hidden}
+.hdr{background:var(--dk);padding:16px 28px;display:flex;align-items:center;gap:16px}
+.logo{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--g);letter-spacing:3px}
+.logos{font-size:9px;letter-spacing:5px;color:#888;text-transform:uppercase;margin-top:2px}
+.hline{flex:1;height:1px;background:linear-gradient(to right,var(--g),transparent);margin:0 14px}
+.htit{text-align:right}.htit h1{font-family:'Playfair Display',serif;font-size:14px;color:#fff;font-weight:600;line-height:1.25}
+.sdis{font-size:10px;color:var(--g);margin-top:3px;font-weight:600}
+.fb{padding:14px 24px}
+.lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:3px;display:block}
+.inp{border:none;border-bottom:1.5px solid var(--bd);padding:5px 2px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--dk);background:transparent;outline:none;transition:border-color .2s;width:100%}
+.inp:focus{border-bottom-color:var(--g)}
+.sel{width:100%;border:none;border-bottom:1.5px solid var(--bd);padding:6px 22px 6px 2px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--dk);background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 2px center;outline:none;cursor:pointer;appearance:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;padding-bottom:12px;border-bottom:1.5px solid var(--gp)}
+.fg{display:flex;flex-direction:column}
+.val{font-size:13px;font-weight:600;color:var(--dk);padding:5px 2px;border-bottom:1.5px solid var(--bd);min-height:26px}
+.sec{margin-bottom:10px;border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.sec.on{border-color:var(--g)}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--lt);cursor:pointer;user-select:none;border:none;width:100%;text-align:left;font-family:inherit}
+.sec-hdr:hover{background:var(--gp)}
+.ck{width:18px;height:18px;border:2px solid var(--bd);border-radius:3px;background:#fff;flex-shrink:0;position:relative;pointer-events:none;transition:all .15s}
+.ck.on{background:var(--g);border-color:var(--g)}
+.ck.on::after{content:'';position:absolute;width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg);top:1px;left:5px}
+.sec-ttl{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--dk)}
+.sec-body{padding:12px 18px;display:none;background:#fff}
+.sec-body.open{display:block}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px}
+.jr{display:flex;align-items:center;gap:10px;background:var(--gp);border:1.5px solid var(--g);border-radius:5px;padding:8px 14px;margin-top:4px}
+.jrn{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--g);line-height:1;min-width:38px;text-align:center}
+.jrd{font-size:11px;color:var(--md)}
+.rappel{background:#FFF8E7;border-left:3px solid var(--g);padding:7px 10px;margin-top:10px;border-radius:0 4px 4px 0;font-size:10.5px;color:var(--md)}
+.mrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.mc{position:relative}
+.mc input[type=radio]{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0;width:100%;height:100%}
+.mc label{display:block;padding:5px 11px;border:1.5px solid var(--bd);border-radius:14px;font-size:11px;font-weight:500;color:var(--md);cursor:pointer;user-select:none}
+.mc input:checked+label{background:var(--g);border-color:var(--g);color:#fff;font-weight:600}
+.evtd{display:none;margin-bottom:9px}.evtd.show{display:block}
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--gp)}
+.leg span{font-size:10px;color:var(--md)}.leg strong{font-style:italic;text-decoration:underline;color:var(--dk)}
+.sigs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.sigbox{border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.sighdr{background:var(--lt);padding:7px 12px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--md);display:flex;justify-content:space-between;align-items:center}
+.sigclr{background:none;border:none;cursor:pointer;font-size:10px;color:var(--g);font-weight:700;padding:2px 4px}
+canvas.cv{display:block;width:100%;height:90px;cursor:crosshair;background:#fff;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.sigft{padding:5px 12px;border-top:1px solid var(--bd);font-size:10px;color:var(--md);background:#FAFAF8;line-height:1.5}
+.sigimg{width:100%;height:90px;display:flex;align-items:center;justify-content:center;background:#fff}
+.sigimg img{max-height:82px;max-width:95%}
+.locked{position:relative}
+.shield{position:absolute;inset:0;background:rgba(249,247,242,.96);border-radius:var(--r);border:2px dashed var(--bd);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;padding:12px}
+.decbox{border:1.5px solid var(--bd);border-radius:var(--r);padding:10px}
+.dectit{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:7px}
+.rrow{display:flex;gap:12px;margin-bottom:7px;flex-wrap:wrap}
+.ri{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px}
+.ri input{accent-color:var(--g);width:13px;height:13px}
+textarea.inp{border:1.5px solid var(--bd);border-radius:4px;padding:5px 8px;resize:vertical;min-height:40px;font-size:12px;width:100%;margin-top:3px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.mbox{background:#fff;border-radius:12px;max-width:500px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.mttl{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dk);margin-bottom:12px}
+#sp{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#fff;font-size:13px}
+#sp.show{display:flex}
+.spi{width:38px;height:38px;border:3px solid rgba(255,255,255,.3);border-top-color:var(--g);border-radius:50%;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dk);color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500;transition:transform .3s;z-index:9999;pointer-events:none;max-width:400px;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+@media print{
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+body{background:#fff;padding:0;}
+.tb,.banner,.modal,.np,#ios-rh-overlay{display:none!important}
+#wrap{box-shadow:none;border-radius:0;max-width:100%}
+.sec-body{display:block!important}
+.shield{display:none!important}
+#sigCArea,#sigRArea{background:#fff!important;min-height:90px;}
+#sigCArea svg,#sigRArea svg{background:#fff!important;}
+#sigCArea svg rect,#sigRArea svg rect{fill:#fff!important;}
+}
+</style>
+</head>
+<body>
+<div id="sp"><div class="spi"></div><span id="spmsg">...</span></div>
+<div id="toast"></div>
+
+<div class="modal" id="mdlDir">
+  <div class="mbox">
+    <div class="mttl">Envoyer au directeur</div>
+    <div style="background:#E8F4E8;border:1.5px solid #27AE60;border-radius:8px;padding:13px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#27AE60;margin-bottom:6px">Fichier genere</div>
+      <div style="font-size:12px;line-height:1.8">Fichier : <strong id="dlname" style="color:var(--g)"></strong><br>Joignez-le a votre mail.</div>
+    </div>
+    <button class="btn bgr" style="width:100%;justify-content:center;margin-bottom:8px" onclick="openMailDir()">Ouvrir ma messagerie</button>
+    <div style="text-align:right"><button class="btn bol" style="font-size:12px;padding:7px 14px" onclick="closeM('mdlDir')">Fermer</button></div>
+  </div>
+</div>
+
+<div class="modal" id="mdlRH">
+  <div class="mbox">
+    <div class="mttl">Envoyer aux RH</div>
+    <div style="font-size:12px;line-height:1.8;margin-bottom:12px;padding:10px;background:var(--lt);border-radius:6px">
+      Joignez le PDF <strong id="rhname" style="color:var(--g)"></strong><br>Envoyez a <strong>ressources-humaines@groupe-edgard.com</strong>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bgr" onclick="openMailRH()">Ouvrir ma messagerie</button>
+      <button class="btn bol" style="font-size:12px;padding:7px 14px" onclick="closeM('mdlRH')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="banner bc" id="banner">
+  <span class="badge" id="badgeTxt">Collaborateur</span>
+  <span id="bannerMsg">Remplissez votre demande, signez, puis cliquez sur <strong>Envoyer au directeur</strong></span>
+</div>
+
+<div class="tb">
+  <button class="btn bol" onclick="resetForm()">Reinitialiser</button>
+  <button class="btn bdk" id="btnPDF" onclick="exportPDF()">PDF</button>
+  <button class="btn bgr" id="btnRH" style="display:none" onclick="doSendRH()">Envoyer aux RH</button>
+  <button class="btn bdk" id="btnCal" style="display:none" onclick="addOutlook()">Agenda Outlook</button>
+  <button class="btn bg" id="btnDir" onclick="doSendDir()">Envoyer au directeur</button>
+</div>
+
+<div id="wrap">
+  <div class="hdr">
+    <div><div class="logo">EDGARD</div><div class="logos">Opticiens</div></div>
+    <div class="hline"></div>
+    <div class="htit"><h1>Demande de Conges<br>&amp; Absences</h1><div class="sdis" id="sdis"></div></div>
+  </div>
+  <div class="fb">
+    <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1.5px solid var(--gp)" id="socBlk">
+      <label class="lbl">Societe</label>
+      <select class="sel" id="societe" onchange="updSoc()">
+        <option value="">-- Selectionnez votre societe --</option>
+        <option>Edgard Developpement</option><option>Ango</option><option>Biarro</option>
+        <option>Bordo</option><option>Caenpo</option><option>Giro</option>
+        <option>Havro</option><option>Jisam</option><option>Lyono</option>
+        <option>Manso</option><option>Marseillo</option><option>Nanceo</option>
+        <option>Nanto</option><option>Niceo</option><option>Orlo</option>
+        <option>Reimo</option><option>Strabo</option><option>Turo</option>
+      </select>
+    </div>
+    <!-- Annule et remplace -->
+    <div id="arBlk" style="margin-bottom:10px;padding:8px 12px;background:#FEF9EC;border:1.5px solid var(--g);border-radius:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">
+        <input type="checkbox" id="chkAR" onchange="toggleAR()" style="accent-color:var(--g);width:14px;height:14px">
+        Annule et remplace
+      </label>
+      <div id="arDateBox" style="display:none;flex:1;min-width:160px">
+        <label class="lbl" style="font-size:9px">Date de la demande initiale</label>
+        <input class="inp" type="date" id="arDate" style="font-size:12px">
+      </div>
+    </div>
+    <div class="r2" id="idBlk">
+      <div class="fg"><label class="lbl">Nom</label><input class="inp" type="text" id="nom" placeholder="Nom de famille" autocomplete="off"></div>
+      <div class="fg"><label class="lbl">Prenom</label><input class="inp" type="text" id="prenom" placeholder="Prenom" autocomplete="off"></div>
+    </div>
+    <div class="sec" id="secCP">
+      <button type="button" class="sec-hdr" onclick="togSec('CP')">
+        <div class="ck" id="ckCP"></div>
+        <span class="sec-ttl">Sollicite un conge paye</span>
+      </button>
+      <div class="sec-body" id="bodyCP">
+        <div class="dg">
+          <div class="fg"><label class="lbl">Premier jour non travaille</label><div id="cpDWrap"><input class="inp" type="date" id="cpD" onchange="calcJ()" autocomplete="off"></div></div>
+          <div class="fg"><label class="lbl">Dernier jour non travaille</label><div id="cpFWrap"><input class="inp" type="date" id="cpF" onchange="calcJ()" autocomplete="off"></div></div>
+        </div>
+        <div class="jr"><div class="jrn" id="jrN">-</div><div class="jrd"><strong>jours ouvres decomptes</strong><br><span id="jrD" style="font-size:10px;color:#999"></span></div></div>
+        <div class="rappel">Rappel : Le conge principal doit etre pris du 1er mai au 31 octobre.</div>
+      </div>
+    </div>
+    <div class="sec" id="secABS">
+      <button type="button" class="sec-hdr" onclick="togSec('ABS')">
+        <div class="ck" id="ckABS"></div>
+        <span class="sec-ttl">Sollicite une autorisation d absence</span>
+      </button>
+      <div class="sec-body" id="bodyABS">
+        <div style="margin-bottom:9px">
+          <div class="lbl" style="margin-bottom:6px">Motif</div>
+          <div class="mrow">
+            <div class="mc"><input type="radio" name="motif" id="mEvt" value="evt" onchange="showEvt(true)"><label for="mEvt">🎉 Evenement familial</label></div>
+            <div class="mc"><input type="radio" name="motif" id="mDec" value="dec" onchange="showEvt(false);showDeces(true)"><label for="mDec">🕊️ Décès</label></div>
+            <div class="mc"><input type="radio" name="motif" id="mRev" value="rev" onchange="showEvt(false)"><label for="mRev">📚 Conge revision apprenti</label></div>
+            <div class="mc"><input type="radio" name="motif" id="mCSS" value="css" onchange="showEvt(false)"><label for="mCSS">💼 CSS</label></div>
+            <div class="mc"><input type="radio" name="motif" id="mANR" value="anr" onchange="showEvt(false)"><label for="mANR">📋 ANR</label></div>
+            <div class="mc"><input type="radio" name="motif" id="mRTT" value="rtt" onchange="showEvt(false)"><label for="mRTT">⏱️ RTT</label></div>
+          </div>
+        </div>
+        <div class="evtd fg" id="evtDet"><label class="lbl">Preciser le motif</label><input class="inp" type="text" id="evtM" placeholder="Ex: mariage, naissance..." autocomplete="off"></div>
+        <div class="evtd fg" id="decDet" style="display:none"><label class="lbl">Lien familial <span style="color:#C0392B">*</span></label><input class="inp" type="text" id="lienFam" placeholder="Ex: père, mère, conjoint..." autocomplete="off"></div>
+        <div class="dg">
+          <div class="fg"><label class="lbl">Premier jour non travaille</label><div id="absDWrap"><input class="inp" type="date" id="absD" autocomplete="off"></div></div>
+          <div class="fg"><label class="lbl">Dernier jour avant reprise</label><div id="absFWrap"><input class="inp" type="date" id="absF" autocomplete="off"></div></div>
+        </div>
+        <div class="dg" style="margin-top:8px">
+          <div class="fg"><label class="lbl">Heures d absence</label><input class="inp" type="number" id="absH" placeholder="Ex: 7" min="0" step="0.5" autocomplete="off"></div>
+          <div class="fg"><label class="lbl">Nombre de jours</label><input class="inp" type="number" id="absJ" placeholder="Ex: 1" min="0" step="0.5" autocomplete="off"></div>
+        </div>
+      </div>
+    </div>
+    <div class="leg">
+      <span><strong>Evt Fam</strong> : Evenement familial</span>
+      <span><strong>CSS</strong> : Conges sans solde</span>
+      <span><strong>ANR</strong> : Absence non remuneree</span>
+      <span><strong>RTT</strong> : Concerne forfait jours</span>
+    </div>
+    <div class="sigs">
+      <div>
+        <div class="sigbox">
+          <div class="sighdr">Signature du collaborateur <button class="sigclr" id="btnClrC" onclick="clrSvgSign()">X Effacer</button></div>
+          <div id="sigCArea" style="width:100%;height:90px;background:#fff;"></div>
+          <div class="sigft"><span id="sigVille"></span><span id="sigSep"></span>le <strong id="today"></strong><br><span id="tsC" style="color:var(--g)"></span></div>
+        </div>
+      </div>
+      <div id="dirBlk" class="locked">
+        <div class="shield" id="shield"><div style="font-size:22px">&#x1F512;</div><div style="font-size:10px;font-weight:600;color:var(--md);line-height:1.5">Reserve au directeur</div></div>
+        <div class="decbox">
+          <div class="dectit">Decision du responsable</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div class="fg"><label class="lbl" style="margin-bottom:3px">Nom du responsable</label><input class="inp" type="text" id="dirNom" placeholder="Nom" autocomplete="off"></div>
+            <div class="fg"><label class="lbl" style="margin-bottom:3px">Prenom du responsable</label><input class="inp" type="text" id="dirPrenom" placeholder="Prenom" autocomplete="off"></div>
+          </div>
+          <div class="rrow">
+            <label class="ri"><input type="radio" name="dec" value="oui"> Autorise le conge</label>
+            <label class="ri"><input type="radio" name="dec" value="non"> Refus</label>
+          </div>
+          <div class="fg"><label class="lbl" style="margin-bottom:3px">Motif si refus</label><textarea class="inp" id="refM" rows="2" placeholder="Motif..."></textarea></div>
+          <div style="margin-top:9px">
+            <div class="sigbox">
+              <div class="sighdr">Signature du responsable <button class="sigclr" onclick="clrSvgSignR()">X Effacer</button></div>
+              <div id="sigRArea" style="width:100%;height:90px;background:#fff;cursor:crosshair;touch-action:none;"></div>
+              <div class="sigft"><span id="tsR" style="color:var(--g)"></span>&nbsp;</div>
+            </div>
+          </div>
+          <div id="calBox" class="np" style="display:none;margin-top:10px;padding:9px 12px;background:var(--gp);border:1.5px solid var(--g);border-radius:6px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px">Ajouter a l agenda</div>
+            <button class="btn bdk" style="font-size:12px;padding:7px 14px" onclick="addOutlook()">Ouvrir dans Outlook</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+/* Utilitaires */
+function ge(i){return document.getElementById(i)}
+function gv(i){var e=ge(i);return e?e.value:''}
+function fD(iso){if(!iso)return'-';var p=iso.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:iso}
+function fNow(){var d=new Date();return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})+' a '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
+function toast(m,ms){var t=ge('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},ms||3500)}
+function spin(m){ge('spmsg').textContent=m||'...';ge('sp').classList.add('show')}
+function unspin(){ge('sp').classList.remove('show')}
+function closeM(id){ge(id).classList.remove('show')}
+window.addEventListener('click',function(e){if(e.target.classList.contains('modal'))e.target.classList.remove('show')})
+
+/* Mapping ville */
+var CITY={'Edgard Developpement':'Tours','Turo':'Tours','Bordo':'Tours','Ango':'Angers','Biarro':'Biarritz','Caenpo':'Caen','Giro':'Bordeaux','Havro':'Le Havre','Jisam':'Saint-Germain-en-Laye','Lyono':'Lyon','Manso':'Le Mans','Marseillo':'Marseille','Nanceo':'Nancy','Nanto':'Nantes','Niceo':'Nice','Orlo':'Orleans','Reimo':'Reims','Strabo':'Strasbourg'}
+function getCity(s){return CITY[s]||''}
+
+/* Jours feries */
+function easter(y){var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31)-1,da=((h+l-7*m+114)%31)+1;return new Date(y,mo,da)}
+function feries(y){var e=easter(y),a=function(d,n){var x=new Date(d);x.setDate(d.getDate()+n);return x};return new Set([new Date(y,0,1),new Date(y,4,1),new Date(y,4,8),new Date(y,6,14),new Date(y,7,15),new Date(y,10,1),new Date(y,10,11),new Date(y,11,25),a(e,1),a(e,39),a(e,50)].map(function(d){return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}))}
+function countJ(s,f){
+  if(!s||!f)return{c:0,fe:0};
+  var S=new Date(s+'T00:00:00'),F=new Date(f+'T00:00:00');if(F<S)return{c:0,fe:0};
+  var fy=new Set();for(var y=S.getFullYear();y<=F.getFullYear();y++)feries(y).forEach(function(k){fy.add(k)});
+  var cp=0,fe=0,dw=S.getDay();if(dw===0)dw=7;
+  var ws=new Date(S);ws.setDate(S.getDate()-(dw-1));
+  while(ws<=F){
+    var r=0,rf=0,r5=0;
+    for(var d=0;d<6;d++){var c=new Date(ws);c.setDate(ws.getDate()+d);if(c>=S&&c<=F){var k=c.getFullYear()*10000+(c.getMonth()+1)*100+c.getDate();r++;if(d<5)r5++;if(fy.has(k))rf++;}}
+    if(r===6){
+      // Semaine complète : ne déduire que les fériés lun-ven (pas samedi)
+      var rfLV=0;
+      for(var d2=0;d2<5;d2++){var c2=new Date(ws);c2.setDate(ws.getDate()+d2);var k2=c2.getFullYear()*10000+(c2.getMonth()+1)*100+c2.getDate();if(fy.has(k2))rfLV++;}
+      cp+=Math.max(0,5-rfLV);fe+=rfLV;
+    }else cp+=Math.max(0,r5-rf);fe+=(r===6?0:rf);
+    ws.setDate(ws.getDate()+7);
+  }
+  return{c:cp,fe:fe};
+}
+
+/* Formulaire */
+function updSoc(){
+  var v=gv('societe'),c=getCity(v);
+  ge('sdis').textContent=v||'';
+  ge('sigVille').textContent=c?'A '+c:'';
+  ge('sigSep').textContent=c?', ':'';
+}
+
+/* Sections custom (aucun input natif) */
+function togSec(id){
+  var sec=ge('sec'+id),body=ge('body'+id),ck=ge('ck'+id);
+  var open=!body.classList.contains('open');
+  sec.classList.toggle('on',open);
+  body.classList.toggle('open',open);
+  ck.classList.toggle('on',open);
+}
+function openSec(id){ge('sec'+id).classList.add('on');ge('body'+id).classList.add('open');ge('ck'+id).classList.add('on')}
+function closeSec(id){ge('sec'+id).classList.remove('on');ge('body'+id).classList.remove('open');ge('ck'+id).classList.remove('on')}
+function isSec(id){return ge('body'+id).classList.contains('open')}
+function showEvt(v){ge('evtDet').classList.toggle('show',v);if(v){ge('decDet').classList.remove('show');ge('decDet').style.display='none';}}
+function showDeces(v){var dd=ge('decDet');if(dd){dd.style.display=v?'block':'none';dd.classList.toggle('show',v);}}
+function toggleAR(){var cb=ge('chkAR');var box=ge('arDateBox');if(box)box.style.display=(cb&&cb.checked)?'flex':'none';}
+function applyRHAdj(){
+  var cpD=gv('rhCpD'),cpF=gv('rhCpF'),absH=gv('rhAbsH'),absJ=gv('rhAbsJ');
+  if(cpD&&ge('cpD')){ge('cpD').type='text';ge('cpD').value=fD(cpD);}
+  if(cpF&&ge('cpF')){ge('cpF').type='text';ge('cpF').value=fD(cpF);}
+  if(cpD&&cpF){var r=countJ(cpD,cpF);ge('jrN').textContent=r.c;ge('jrD').textContent=r.fe?'dont '+r.fe+' jour(s) ferié(s)':'';ge('jrBlk').style.display='flex';}
+  if(absH&&ge('absH')){ge('absH').type='text';ge('absH').value=absH;}
+  if(absJ&&ge('absJ')){ge('absJ').type='text';ge('absJ').value=absJ;}
+  toast('Ajustements appliqués',3000);
+}
+function calcJ(){
+  var d=gv('cpD'),f=gv('cpF');
+  if(!d||!f){ge('jrN').textContent='-';ge('jrD').textContent='';return}
+  var r=countJ(d,f);
+  ge('jrN').textContent=r.c;
+  ge('jrD').textContent=r.fe>0?'dont '+r.fe+' jour(s) ferie(s)':'Aucun jour ferie';
+}
+
+/* Signature collaborateur — SVG interactif (jamais noir sur iOS) */
+var _tsC='',_tsR='';
+var NS='http://www.w3.org/2000/svg';
+
+function initSvgSign(n){
+  n=n||0;
+  var area=ge('sigCArea');
+  if(!area||area._ok)return;
+  var w=area.offsetWidth;
+  if(w<10){if(n<30)setTimeout(function(){initSvgSign(n+1);},100);return;}
+  area._ok=true;area._strokes=[];
+  var _cur=null,_curData=null,draw=false;
+  // Créer le SVG — fond blanc garanti, jamais de buffer canvas
+  var svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('viewBox','0 0 400 90');
+  svg.setAttribute('style','display:block;width:100%;height:90px;touch-action:none;cursor:crosshair;-webkit-user-select:none;user-select:none;background-color:#fff;');
+  var bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width','400');bg.setAttribute('height','90');bg.setAttribute('fill','#fff');
+  svg.appendChild(bg);
+  area.appendChild(svg);
+  function getPos(e){
+    var r=svg.getBoundingClientRect();
+    var s=e.changedTouches?e.changedTouches[0]:e.touches?e.touches[0]:e;
+    return[Math.min(99,Math.max(0,Math.round((s.clientX-r.left)/r.width*99))),
+           Math.min(99,Math.max(0,Math.round((s.clientY-r.top)/r.height*99)))];
+  }
+  function startDraw(p){
+    draw=true;
+    if(!_tsC){_tsC=fNow();var el=ge('tsC');if(el)el.textContent='Signe le '+_tsC;}
+    _curData=[p[0],p[1]];area._strokes.push(_curData);
+    _cur=document.createElementNS(NS,'path');
+    _cur.setAttribute('stroke','#1A1A1A');_cur.setAttribute('stroke-width','3');
+    _cur.setAttribute('stroke-linecap','round');_cur.setAttribute('stroke-linejoin','round');
+    _cur.setAttribute('fill','none');
+    _cur.setAttribute('d','M'+(p[0]/99*400).toFixed(1)+','+(p[1]/99*90).toFixed(1));
+    svg.appendChild(_cur);
+  }
+  function moveDraw(p){
+    if(!draw||!_cur)return;
+    _curData.push(p[0],p[1]);
+    _cur.setAttribute('d',_cur.getAttribute('d')+'L'+(p[0]/99*400).toFixed(1)+','+(p[1]/99*90).toFixed(1));
+  }
+  function endDraw(){draw=false;_cur=null;_curData=null;}
+  document.addEventListener('touchmove',function(e){if(draw)try{e.preventDefault();}catch(x){}},{passive:false});
+  svg.addEventListener('mousedown',function(e){e.preventDefault();startDraw(getPos(e));});
+  svg.addEventListener('mousemove',function(e){if(!draw)return;e.preventDefault();moveDraw(getPos(e));});
+  svg.addEventListener('mouseup',endDraw);svg.addEventListener('mouseleave',endDraw);
+  svg.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();startDraw(getPos(e));},{passive:false,capture:true});
+  svg.addEventListener('touchmove',function(e){e.preventDefault();e.stopPropagation();moveDraw(getPos(e));},{passive:false,capture:true});
+  svg.addEventListener('touchend',function(e){e.preventDefault();endDraw();},{passive:false});
+  svg.addEventListener('touchcancel',endDraw);
+}
+
+function clrSvgSign(){
+  var area=ge('sigCArea');
+  if(!area)return;
+  area._strokes=[];
+  var svg=area.querySelector('svg');
+  if(svg){var paths=svg.querySelectorAll('path');paths.forEach(function(p){svg.removeChild(p);});}
+  _tsC='';var el=ge('tsC');if(el)el.textContent='';
+}
+
+/* Signature directeur — SVG (comme collab, jamais de canvas dans le DOM) */
+function initSvgSignR(n){
+  n=n||0;
+  var area=ge('sigRArea');
+  if(!area||area._ok)return;
+  var w=area.offsetWidth;
+  if(w<10){if(n<30)setTimeout(function(){initSvgSignR(n+1);},100);return;}
+  area._ok=true;area._strokes=[];
+  var _cur=null,_curData=null,draw=false;
+  var svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('viewBox','0 0 400 90');
+  svg.setAttribute('style','display:block;width:100%;height:90px;touch-action:none;cursor:crosshair;-webkit-user-select:none;user-select:none;background-color:#fff;');
+  var bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width','400');bg.setAttribute('height','90');bg.setAttribute('fill','#fff');
+  svg.appendChild(bg);
+  area.appendChild(svg);
+  function getPos(e){
+    var r=svg.getBoundingClientRect();
+    var s=e.changedTouches?e.changedTouches[0]:e.touches?e.touches[0]:e;
+    return[Math.min(99,Math.max(0,Math.round((s.clientX-r.left)/r.width*99))),
+           Math.min(99,Math.max(0,Math.round((s.clientY-r.top)/r.height*99)))];
+  }
+  function startDraw(p){
+    draw=true;
+    if(!_tsR){_tsR=fNow();var el=ge('tsR');if(el)el.textContent='Signe le '+_tsR;}
+    _curData=[p[0],p[1]];area._strokes.push(_curData);
+    _cur=document.createElementNS(NS,'path');
+    _cur.setAttribute('stroke','#1A1A1A');_cur.setAttribute('stroke-width','3');
+    _cur.setAttribute('stroke-linecap','round');_cur.setAttribute('stroke-linejoin','round');
+    _cur.setAttribute('fill','none');
+    _cur.setAttribute('d','M'+(p[0]/99*400).toFixed(1)+','+(p[1]/99*90).toFixed(1));
+    svg.appendChild(_cur);
+  }
+  function moveDraw(p){
+    if(!draw||!_cur)return;
+    _curData.push(p[0],p[1]);
+    _cur.setAttribute('d',_cur.getAttribute('d')+'L'+(p[0]/99*400).toFixed(1)+','+(p[1]/99*90).toFixed(1));
+  }
+  function endDraw(){draw=false;_cur=null;_curData=null;}
+  document.addEventListener('touchmove',function(e){if(draw)try{e.preventDefault();}catch(x){}},{passive:false});
+  svg.addEventListener('mousedown',function(e){e.preventDefault();startDraw(getPos(e));});
+  svg.addEventListener('mousemove',function(e){if(!draw)return;e.preventDefault();moveDraw(getPos(e));});
+  svg.addEventListener('mouseup',endDraw);svg.addEventListener('mouseleave',endDraw);
+  svg.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();startDraw(getPos(e));},{passive:false,capture:true});
+  svg.addEventListener('touchmove',function(e){e.preventDefault();e.stopPropagation();moveDraw(getPos(e));},{passive:false,capture:true});
+  svg.addEventListener('touchend',function(e){e.preventDefault();endDraw();},{passive:false});
+  svg.addEventListener('touchcancel',endDraw);
+}
+function clrSvgSignR(){
+  var area=ge('sigRArea');
+  if(!area)return;
+  area._strokes=[];
+  var svg=area.querySelector('svg');
+  if(svg){var paths=svg.querySelectorAll('path');paths.forEach(function(p){svg.removeChild(p);});}
+  _tsR='';var el=ge('tsR');if(el)el.textContent='';
+}
+/* Récupère les tracés directeur — depuis _strokes ou directement depuis le SVG DOM */
+function getSigRStrokes(){
+  var strokes=cvStrokes('cvR');
+  if(strokes&&strokes.length)return strokes;
+  // Fallback : lire les paths SVG directement dans le DOM
+  var area=ge('sigRArea');if(!area)return null;
+  var paths=area.querySelectorAll('path');if(!paths.length)return null;
+  var result=[];
+  paths.forEach(function(path){
+    var d=path.getAttribute('d');if(!d)return;
+    var coords=[];
+    var re2=/[ML]([\d.]+),([\d.]+)/g,mm;
+    while((mm=re2.exec(d))!==null){
+      coords.push(Math.round(parseFloat(mm[1])/400*99),Math.round(parseFloat(mm[2])/90*99));
+    }
+    if(coords.length>=2)result.push(coords);
+  });
+  return result.length?result:null;
+}
+function isEmptyR(){
+  var a=ge('sigRArea');return!a||!a._strokes||a._strokes.length===0;
+}
+function isEmpty(id){
+  if(id==='cvC'||id==='sigCArea'){var a=ge('sigCArea');return!a||!a._strokes||a._strokes.length===0;}
+  var c=ge(id);return!c||!c._strokes||c._strokes.length===0;
+}
+function cvStrokes(id){
+  var el=(id==='cvC')?ge('sigCArea'):ge(id);
+  return(el&&el._strokes&&el._strokes.length)?el._strokes:null;
+}
+
+function cvJpeg(id,q){
+  var area=(id==='cvC')?ge('sigCArea'):(id==='cvR')?ge('sigRArea'):ge(id);
+  if(!area||!area._strokes||!area._strokes.length)return'';
+  try{
+    var t=document.createElement('canvas');t.width=400;t.height=90;
+    var x=t.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,400,90);
+    x.strokeStyle='#1A1A1A';x.lineWidth=2.5;x.lineCap='round';x.lineJoin='round';
+    for(var i=0;i<area._strokes.length;i++){
+      var s=area._strokes[i];if(s.length<4)continue;
+      x.beginPath();x.moveTo(s[0]/99*400,s[1]/99*90);
+      for(var j=2;j<s.length;j+=2)x.lineTo(s[j]/99*400,s[j+1]/99*90);
+      x.stroke();
+    }
+    return t.toDataURL('image/jpeg',q||0.6);
+  }catch(e){return'';}
+}
+function cvJpegMini(id){return'';}/* inutile désormais — sigStrokes suffit */
+function drawStrokes(canvas,strokes){
+  if(!canvas||!strokes||!strokes.length)return;
+  var cw=canvas.width||400,ch=canvas.height||90;
+  var ctx=canvas.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);
+  ctx.strokeStyle='#1A1A1A';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
+  for(var i=0;i<strokes.length;i++){
+    var s=strokes[i];if(s.length<4)continue;
+    ctx.beginPath();ctx.moveTo(s[0]/99*cw,s[1]/99*ch);
+    for(var j=2;j<s.length;j+=2)ctx.lineTo(s[j]/99*cw,s[j+1]/99*ch);
+    ctx.stroke();
+  }
+}
+
+/* Collecte */
+var _md=null,_dlN='',_rhN='';
+function collect(){
+  var me=document.querySelector('input[name="motif"]:checked');
+  return{
+    societe:gv('societe'),ville:getCity(gv('societe')),
+    nom:gv('nom'),prenom:gv('prenom'),annuleRemplace:ge('chkAR')&&ge('chkAR').checked?{dateInit:gv('arDate')}:null,
+    date:ge('today').textContent,tsC:_tsC,
+    cp:{on:isSec('CP'),d:gv('cpD'),f:gv('cpF'),n:ge('jrN').textContent,det:ge('jrD').textContent},
+    abs:{on:isSec('ABS'),m:me?me.value:'',mL:me?me.closest('.mc').querySelector('label').textContent.trim():'',
+      evtM:gv('evtM'),lienFam:gv('lienFam'),d:gv('absD'),f:gv('absF'),h:gv('absH'),j:gv('absJ')},
+    sigC:cvJpeg('cvC',0.55),
+    sigStrokes:cvStrokes('cvC')
+  };
+}
+
+/* Generation fichier directeur */
+function buildDir(data){
+  function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  var css="";var st=document.querySelector("style");if(st)css=st.textContent||st.innerText||"";
+  var city=data.ville||getCity(data.societe)||"";
+  var cpOn=!!(data.cp&&data.cp.on),absOn=!!(data.abs&&data.abs.on);
+  var hasDates=!!(cpOn&&data.cp.d&&data.cp.f)||!!(absOn&&data.abs&&data.abs.d&&data.abs.f);
+  var cpHtml="";
+  if(cpOn){
+    var cD=esc(fD(data.cp.d)),cF=esc(fD(data.cp.f)),cN=esc(data.cp.n),cDet=data.cp.det?esc(data.cp.det):"";
+    cpHtml="<div class=\"sec on\"><div class=\"sec-hdr\" style=\"pointer-events:none\"><div class=\"ck on\"></div><span class=\"sec-ttl\">Solicite un conge paye</span></div><div class=\"sec-body open\"><div class=\"dg\">";
+    cpHtml+="<div class=\"fg\"><label class=\"lbl\">Premier jour</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+cD+"</div></div><div class=\"fg\"><label class=\"lbl\">Dernier jour</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+cF+"</div></div></div><div class=\"jr\"><div class=\"jrn\">"+cN+"</div><div class=\"jrd\"><strong>jours ouvres</strong>";
+    if(cDet)cpHtml+="<br><span style=\"font-size:10px;color:#999\">"+cDet+"</span>";
+    cpHtml+="</div></div><div class=\"rappel\">Conge principal : 1er mai au 31 octobre.</div></div></div>";
+  }
+  var absHtml="";
+  if(absOn&&data.abs){
+    var mot=esc(data.abs.mL||""),aD=esc(fD(data.abs.d)),aF=esc(fD(data.abs.f));
+    absHtml="<div class=\"sec on\"><div class=\"sec-hdr\" style=\"pointer-events:none\"><div class=\"ck on\"></div><span class=\"sec-ttl\">Autorisation d absence</span></div><div class=\"sec-body open\"><div style=\"margin-bottom:9px\"><div class=\"lbl\" style=\"margin-bottom:6px\">Motif</div><div style=\"display:inline-block;padding:5px 11px;border:1.5px solid var(--g);border-radius:14px;font-size:11px;font-weight:600;color:#fff;background:var(--g)\">"+mot+"</div>";
+    if(data.abs.evtM)absHtml+="<div style=\"margin-top:6px;font-size:12px\">"+esc(data.abs.evtM)+"</div>";
+    absHtml+="</div><div class=\"dg\"><div class=\"fg\"><label class=\"lbl\">Premier jour</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+aD+"</div></div><div class=\"fg\"><label class=\"lbl\">Dernier jour</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+aF+"</div></div></div>";
+    if(data.abs.h||data.abs.j)absHtml+="<div class=\"dg\" style=\"margin-top:8px\"><div class=\"fg\"><label class=\"lbl\">Heures d absence</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px\">"+esc(data.abs.h||"-")+"</div></div><div class=\"fg\"><label class=\"lbl\">Nombre de jours</label><div style=\"font-size:13px;font-weight:600;padding:5px 2px\">"+esc(data.abs.j||"-")+"</div></div></div>";
+    absHtml+="</div></div>";
+  }
+  var sigC="<div style=\"height:90px;display:flex;align-items:center;justify-content:center;color:#ccc;font-style:italic;font-size:11px\">Aucune signature</div>";
+  if(data.sigC&&data.sigC.length>50)sigC="<div class=\"sigimg\"><img src=\""+data.sigC+"\" style=\"max-height:82px;max-width:95%\"></div>";
+  var agUrl="",agH="";
+  if(hasDates){
+    var dD=cpOn?data.cp.d:(data.abs&&data.abs.d||"");
+    var dF2=cpOn?data.cp.f:(data.abs&&data.abs.f||"");
+    var lb=cpOn?"CP":((data.abs&&data.abs.mL||"Absence").replace(/^[^\w]*/,"").trim());
+    var sj=(data.nom||"").toUpperCase()+" "+(data.prenom||"")+" - "+lb+" du "+fD(dD)+" au "+fD(dF2);
+    var d2=new Date(dF2+"T00:00:00");d2.setDate(d2.getDate()+1);
+    var dFx=d2.getFullYear()+"-"+String(d2.getMonth()+1).padStart(2,"0")+"-"+String(d2.getDate()).padStart(2,"0");
+    agUrl="https://outlook.office.com/calendar/action/compose?rru=addevent&startdt="+encodeURIComponent(dD+"T00:00:00")+"&enddt="+encodeURIComponent(dFx+"T00:00:00")+"&subject="+encodeURIComponent(sj)+"&allday=true";
+    agH="<div style=\"margin-top:10px;padding:9px 12px;background:var(--gp);border:1.5px solid var(--g);border-radius:6px\"><div style=\"font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px\">Agenda Outlook</div><a href=\""+agUrl+"\" target=\"_blank\" style=\"display:inline-flex;align-items:center;padding:7px 14px;background:#1A1A1A;color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none\">Ouvrir dans Outlook</a></div>";
+  }
+  var dJ=JSON.stringify({societe:data.societe,nom:data.nom,prenom:data.prenom,date:data.date,tsC:data.tsC,cp:data.cp,abs:data.abs,ville:city,agUrl:agUrl,rhMail:getRhMail(data.societe)});
+  var spCode="\n(function(W){\nfunction SP(c,o){\n  this.c=c;this.o=o||{};this._dr=false;this._empty=true;\n  this._cb=this.o.onBegin||function(){};this._init();\n}\nSP.prototype._init=function(){\n  var S=this,c=this.c,dpr=W.devicePixelRatio||1;\n  var pw=c.parentElement?c.parentElement.offsetWidth:c.offsetWidth||300;\n  var ph=parseInt(c.style.height)||110;\n  c.width=pw*dpr;c.height=ph*dpr;\n  c.style.width=pw+'px';c.style.height=ph+'px';\n  var ctx=c.getContext('2d');\n  ctx.scale(dpr,dpr);\n  ctx.fillStyle='#fff';ctx.fillRect(0,0,pw,ph);\n  ctx.strokeStyle=S.o.penColor||'#1A1A1A';\n  ctx.lineWidth=S.o.lineWidth||2.5;\n  ctx.lineCap='round';ctx.lineJoin='round';\n  S._ctx=ctx;\n  c.style.touchAction='none';\n  c.setAttribute('touch-action','none');\n  function xy(e){\n    var r=c.getBoundingClientRect();\n    var s=e.changedTouches?e.changedTouches[0]:e.touches?e.touches[0]:e;\n    return[s.clientX-r.left,s.clientY-r.top];\n  }\n  function dn(e){\n    try{e.preventDefault();}catch(x){}try{e.stopPropagation();}catch(x){}\n    S._dr=true;\n    if(S._empty){S._empty=false;S._cb();}\n    var p=xy(e);ctx.beginPath();ctx.moveTo(p[0],p[1]);\n  }\n  function mv(e){\n    try{e.preventDefault();}catch(x){}try{e.stopPropagation();}catch(x){}\n    if(!S._dr)return;\n    var p=xy(e);ctx.lineTo(p[0],p[1]);ctx.stroke();\n    ctx.beginPath();ctx.moveTo(p[0],p[1]);\n  }\n  function up(e){try{e.preventDefault();}catch(x){}S._dr=false;}\n  document.addEventListener('touchmove',function(e){if(S._dr)try{e.preventDefault();}catch(x){}},{passive:false});\n  if(W.PointerEvent){\n    c.addEventListener('pointerdown',function(e){try{c.setPointerCapture(e.pointerId);}catch(x){}dn(e);},{passive:false,capture:true});\n    c.addEventListener('pointermove',mv,{passive:false,capture:true});\n    c.addEventListener('pointerup',up,{passive:false});\n    c.addEventListener('pointercancel',up,{passive:false});\n  }\n  c.addEventListener('touchstart',dn,{passive:false,capture:true});\n  c.addEventListener('touchmove',mv,{passive:false,capture:true});\n  c.addEventListener('touchend',up,{passive:false,capture:true});\n  c.addEventListener('touchcancel',up,{passive:false});\n  c.addEventListener('mousedown',dn,false);\n  c.addEventListener('mousemove',mv,false);\n  c.addEventListener('mouseup',up,false);\n  c.addEventListener('mouseleave',up,false);\n};\nSP.prototype.clear=function(){\n  var c=this.c,dpr=W.devicePixelRatio||1;\n  this._ctx.clearRect(0,0,c.width/dpr,c.height/dpr);\n  this._empty=true;\n};\nSP.prototype.isEmpty=function(){return this._empty;};\nSP.prototype.toDataURL=function(){\n  var c=this.c,t=document.createElement('canvas');\n  t.width=c.width;t.height=c.height;\n  var x=t.getContext('2d');\n  x.fillStyle='#fff';x.fillRect(0,0,t.width,t.height);\n  x.drawImage(c,0,0);\n  return t.toDataURL('image/jpeg',0.85);\n};\nW.SigPad=SP;\n})(window);\n";
+  var dirJs="var D="+dJ+";"+"var _tsR=\"\";var _sp=null;"+"function ge(i){return document.getElementById(i)}"+"function gv(i){var e=ge(i);return e?e.value:\"\"}"+"function fNow(){var d=new Date(),a=d.toLocaleDateString(\"fr-FR\",{day:\"2-digit\",month:\"2-digit\",year:\"numeric\"}),b=d.toLocaleTimeString(\"fr-FR\",{hour:\"2-digit\",minute:\"2-digit\"});return a+\" a \"+b}"+"function toast(m,ms){var t=ge(\"toast\");if(!t)return;t.textContent=m;t.classList.add(\"show\");setTimeout(function(){t.classList.remove(\"show\")},ms||3500)}"+"function spin(){var e=ge(\"sp\");if(e)e.classList.add(\"show\")}"+"function unspin(){var e=ge(\"sp\");if(e)e.classList.remove(\"show\")}"+"function clrSig(){if(_sp)_sp.clear();_tsR=\"\";var el=ge(\"tsR\");if(el)el.textContent=\"\"}"+"function initSig(){var c=ge(\"cvR\");if(!c||!window.SigPad){setTimeout(initSig,100);return}var pw=c.parentElement?c.parentElement.offsetWidth:0;if(pw<10){setTimeout(initSig,100);return}_sp=new SigPad(c,{penColor:\"#1A1A1A\",lineWidth:2.5,onBegin:function(){if(!_tsR){_tsR=fNow();var el=ge(\"tsR\");if(el)el.textContent=\"Signe le \"+_tsR}}})}"+"async function exportPDF(){var ov=document.querySelectorAll('[style*=\"position:fixed\"],[style*=\"border-radius:16px 16px 0 0\"]');var hid=[];ov.forEach(function(e){if(e.style.display!==\"none\"){hid.push({e:e,d:e.style.display});e.style.display=\"none\";}});spin();try{var cv=await html2canvas(ge(\"wrap\"),{scale:1.5,useCORS:true,logging:false,windowWidth:780});var img=cv.toDataURL(\"image/jpeg\",.88);var P=window.jspdf.jsPDF;var margin=6,pageW=210,pageH=297,maxW=pageW-2*margin,maxH=pageH-2*margin;var imgW=maxW,imgH=cv.height*imgW/cv.width;if(imgH>maxH){imgH=maxH;imgW=cv.width*imgH/cv.height;}var x=(pageW-imgW)/2,y=(pageH-imgH)/2;var pdf=new P({orientation:\"portrait\",unit:\"mm\",format:\"a4\"});pdf.addImage(img,\"JPEG\",x,y,imgW,imgH);pdf.save(\"Demande_\"+D.prenom+\"_\"+D.nom+\"_SIGNE.pdf\");}catch(e){}}hid.forEach(function(o){o.e.style.display=o.d;});unspin()}"+"async function sendRH(){var dn=gv(\"dirNom\"),dp=gv(\"dirPrenom\"),sig=(dp&&dn)?dp+\" \"+dn:\"\";await exportPDF();var body=\"Bonjour,\\n\\nVeuillez trouver en piece jointe la demande signee de \"+D.prenom+\" \"+D.nom+\" (\"+D.societe+\").\\n\\nCordialement,\"+(sig?\"\\n\"+sig:\"\");var rM_=D.rhMail||\\\"ressources-humaines@groupe-edgard.com\\\";var rCc_=rM_!==\\\"ressources-humaines@groupe-edgard.com\\\"?\\\"&cc=\\\"+encodeURIComponent(rM_):\\\"\\\";window.location.href=\\\"mailto:ressources-humaines@groupe-edgard.com\\\"+rCc_+\\\"?subject=\\\"+encodeURIComponent(\\\"[RH][\\\"+D.societe+\\\"] Demande \\\"+D.prenom+\\\" \\\"+D.nom)+\\\"&body=\\\"+encodeURIComponent(body);}"+"document.addEventListener(\"DOMContentLoaded\",initSig);window.addEventListener(\"load\",initSig);";
+  var H="<!DOCTYPE html><html lang=\"fr\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">";
+  H+="<title>Conges "+esc(data.prenom)+" "+esc(data.nom)+"<\/title>";
+  H+="<link href=\"https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap\" rel=\"stylesheet\"><script src=\"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js\"><\\/script><script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js\"><\\/script>";
+  H+="<style>"+css+"</style></head><body>";
+  H+="<div id=\"sp\"><div class=\"spi\"></div></div><div id=\"toast\"></div><div class=\"tb\"><button class=\"btn bdk\" onclick=\"exportPDF()\">PDF signe</button><button class=\"btn bgr\" onclick=\"sendRH()\">Envoyer aux RH</button>";
+  if(agUrl)H+="<a href=\""+agUrl+"\" target=\"_blank\" class=\"btn bdk\" style=\"text-decoration:none\">Agenda Outlook</a>";
+  H+="</div><div class=\"wrap\" id=\"wrap\"><div class=\"hdr\"><div><div class=\"logo\">EDGARD</div><div class=\"logos\">Opticiens</div></div><div class=\"hline\"></div>";
+  H+="<div class=\"htit\"><h1>Conges &amp; Absences<\/h1><div class=\"sdis\">"+esc(data.societe)+"<\/div><\/div><\/div><div class=\"fb\">";
+  H+="<div class=\"banner bd2\"><span class=\"badge\">Directeur</span>&nbsp; Demande de <strong>"+esc(data.prenom)+" "+esc(data.nom)+"<\/strong> ("+esc(data.societe)+") - Signez puis envoyez aux RH<\/div>";
+  H+="<div style=\"margin-bottom:12px;padding-bottom:12px;border-bottom:1.5px solid var(--gp)\"><label class=\"lbl\">Societe<\/label><div style=\"font-size:13px;font-weight:600;padding:5px 2px\">"+esc(data.societe)+"<\/div><\/div>";
+  H+="<div class=\"r2\"><div class=\"fg\"><label class=\"lbl\">Nom<\/label><div style=\"font-size:14px;font-weight:700;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+esc(data.nom)+"<\/div><\/div><div class=\"fg\"><label class=\"lbl\">Prenom<\/label><div style=\"font-size:14px;font-weight:700;padding:5px 2px;border-bottom:1.5px solid var(--bd)\">"+esc(data.prenom)+"<\/div><\/div><\/div>";
+  if(data.annuleRemplace){arHtml="<div style=\\\"margin-bottom:8px;padding:6px 10px;background:#FEF9EC;border:1.5px solid #C9A84C;border-radius:5px;font-size:11px\\\"><strong>⚠️ Annule et remplace</strong>"+(data.annuleRemplace.dateInit?" la demande du "+data.annuleRemplace.dateInit:"")+"</div>";}H+=arHtml+cpHtml+absHtml;
+  H+="<div class=\"leg\"><span><strong>Evt Fam</strong> : Evenement familial</span><span><strong>CSS</strong> : Conges sans solde</span><span><strong>ANR</strong> : Absence non remuneree</span><span><strong>RTT</strong> : Forfait jours</span></div>";
+  H+="<div class=\"sigs\"><div><div class=\"sigbox\"><div class=\"sighdr\">Signature du collaborateur</div>";
+  H+=sigC;
+  H+="<div class=\"sigft\">"+(city?"A "+esc(city)+", ":"")+" le <strong>"+esc(data.date)+"<\/strong>";
+  if(data.tsC)H+="<br><span style=\"color:var(--g);font-weight:600\">Signe le "+esc(data.tsC)+"</span>";
+  H+="</div></div></div><div><div class=\"decbox\"><div class=\"dectit\">Decision du responsable</div><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px\"><div class=\"fg\"><label class=\"lbl\" style=\"margin-bottom:3px\">Nom</label><input class=\"inp\" type=\"text\" id=\"dirNom\" placeholder=\"Nom\" autocomplete=\"off\"></div><div class=\"fg\"><label class=\"lbl\" style=\"margin-bottom:3px\">Prenom</label><input class=\"inp\" type=\"text\" id=\"dirPrenom\" placeholder=\"Prenom\" autocomplete=\"off\"></div></div><div class=\"rrow\"><label class=\"ri\"><input type=\"radio\" name=\"dec\" value=\"oui\"> Autorise</label><label class=\"ri\"><input type=\"radio\" name=\"dec\" value=\"non\"> Refus</label></div><div class=\"fg\"><label class=\"lbl\" style=\"margin-bottom:3px\">Motif refus</label><textarea class=\"inp\" id=\"refM\" rows=\"2\" placeholder=\"Motif...\"></textarea></div><div style=\"margin-top:9px\"><div class=\"sigbox\"><div class=\"sighdr\">Signature responsable <button class=\"sigclr\" onclick=\"clrSig()\">X Effacer</button></div><div id=\"sigRArea\" style=\"width:100%;height:110px;background:#fff;cursor:crosshair;touch-action:none;\"></div><div class=\"sigft\"><span id=\"tsR\" style=\"color:var(--g);font-weight:600\"></span>&nbsp;</div></div></div>";
+  H+=agH;
+  H+="</div></div></div></div></div>";
+  H+="<script>\n"+spCode+"\n<\/script><script>\n"+dirJs+"\n<\/script>"+"</body></html>";
+  return H;
+}
+
+/* Envoyer au directeur */
+function encodeHash(data){
+  try{
+    var d=JSON.parse(JSON.stringify(data));
+    delete d.sigC;      // trop lourd pour l'URL
+    delete d.sigCThumb; // inutile désormais
+    // sigStrokes reste dans d
+    return encodeURIComponent(JSON.stringify(d));
+  }catch(e){return ''}
+}
+function decodeHash(str){
+  try{return JSON.parse(decodeURIComponent(str));}
+  catch(e){return null}
+}
+function doSendDir(){
+  if(!gv('societe')){toast('Selectionnez votre societe');return}
+  if(!gv('nom').trim()||!gv('prenom').trim()){toast('Saisissez votre nom et prenom');return}
+  if(!isSec('CP')&&!isSec('ABS')){toast('Cochez au moins un type de demande');return}
+  if(isSec('ABS')&&(!gv('absH').trim()||!gv('absJ').trim())){toast('Saisissez les heures et le nombre de jours d\'absence');return}
+  var motifAbs=document.querySelector('input[name="motif"]:checked');
+  if(isSec('ABS')&&motifAbs&&motifAbs.value==='dec'&&!gv('lienFam').trim()){toast('Précisez le lien familial pour le décès');return}
+  if(isEmpty('cvC')){toast('Apposez votre signature');return}
+  spin('Generation du lien...');
+  var sh=ge('shield');if(sh)sh.style.display='none';
+  var data=collect();_md=data;
+  if(sh)sh.style.display='';
+  var encoded=encodeHash(data);
+  var base=(window.location.protocol==='https:')
+    ?window.location.href.split('?')[0].split('#')[0]
+    :'https://edgard-opticiens.github.io/congespayes';
+  var longUrl=base+'?d='+encoded;
+  function tryShorten(longUrl,cb){
+    var done=false;
+    var timer=setTimeout(function(){if(!done){done=true;cb(longUrl);}},4000);
+    fetch('https://is.gd/create.php?format=json&url='+encodeURIComponent(longUrl))
+      .then(function(r){return r.json()})
+      .then(function(res){
+        if(done)return;
+        if(res&&res.shorturl){done=true;clearTimeout(timer);cb(res.shorturl);}
+        else{
+          // is.gd a répondu mais pas de shorturl → essayer TinyURL
+          clearTimeout(timer);
+          fetch('https://tinyurl.com/api-create.php?url='+encodeURIComponent(longUrl))
+            .then(function(r){return r.text()})
+            .then(function(t){done=true;cb((t&&t.startsWith('https'))?t:longUrl);})
+            .catch(function(){done=true;cb(longUrl);});
+        }
+      })
+      .catch(function(){
+        if(done)return;clearTimeout(timer);
+        // is.gd a échoué → essayer TinyURL
+        fetch('https://tinyurl.com/api-create.php?url='+encodeURIComponent(longUrl))
+          .then(function(r){return r.text()})
+          .then(function(t){done=true;cb((t&&t.startsWith('https'))?t:longUrl);})
+          .catch(function(){done=true;cb(longUrl);});
+      });
+  }
+  tryShorten(longUrl,function(dirUrl){unspin();_ouvrirMailDir(data,dirUrl);});
+}
+function _ouvrirMailDir(data,dirUrl){
+  var recap='';
+  if(data.cp&&data.cp.on)recap+='\n- CP : du '+fD(data.cp.d)+' au '+fD(data.cp.f)+' ('+data.cp.n+' jours)';
+  if(data.abs&&data.abs.on)recap+='\n- Absence : '+fD(data.abs.d)+' au '+fD(data.abs.f);
+  var body='Bonjour,\n\nMerci de signer la demande de '+data.prenom+' '+data.nom+' ('+data.societe+').';
+  if(recap)body+='\n\nRecapitulatif :'+recap;
+  body+='\n\nLien pour signer (cliquez pour ouvrir) :\n\n'+dirUrl+'\n\nCordialement,\n'+data.prenom+' '+data.nom;
+  window.location.href='mailto:?subject='+encodeURIComponent('['+data.societe+'] A signer - '+data.prenom+' '+data.nom)+'&body='+encodeURIComponent(body);
+  toast('Mail ouvert — lien inclus',4000);
+}
+function openMailDir(){_ouvrirMailDir(_md||{},'');}
+
+var _isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+async function genPDF(asBlob){
+  if(_isIOS)return null;
+  var bCP=ge('bodyCP'),bAB=ge('bodyABS');
+  var wCP=bCP.classList.contains('open'),wAB=bAB.classList.contains('open');
+  bCP.classList.add('open');bAB.classList.add('open');
+  var sh=ge('shield');if(sh)sh.style.display='none';
+  // Masquer l'overlay iOS s'il est présent
+  var iosOverlay=document.getElementById('ios-rh-overlay');
+  if(iosOverlay)iosOverlay.style.display='none';
+  // Masquer modals et toasts
+  document.querySelectorAll('.modal,#toast,#sp').forEach(function(el){el.style.visibility='hidden';});
+  var saved=[];
+  document.querySelectorAll('input[type="date"]').forEach(function(el){
+    if(!el.value)return;saved.push({el:el,v:el.value});el.type='text';el.value=fD(el.value);
+  });
+  var res=null;
+  try{
+    // windowWidth:860 = largeur réelle du wrap, scale:1.2 pour tenir sur A4
+    var cv=await html2canvas(ge('wrap'),{scale:1.2,useCORS:true,logging:false,windowWidth:860});
+    saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});
+    var img=cv.toDataURL('image/jpeg',.88);
+    var P=window.jspdf.jsPDF;
+    var margin=4,pageW=210,pageH=297,maxW=pageW-2*margin,maxH=pageH-2*margin;
+    var imgW=maxW,imgH=cv.height*imgW/cv.width;
+    if(imgH>maxH){imgH=maxH;imgW=cv.width*imgH/cv.height;}
+    var x=(pageW-imgW)/2,y=margin;
+    var pdf=new P({orientation:'portrait',unit:'mm',format:'a4'});
+    pdf.addImage(img,'JPEG',x,y,imgW,imgH);
+    if(asBlob)res=pdf.output('blob');
+    else{pdf.save(('Demande_'+(_md?_md.prenom:gv('prenom'))+'_'+(_md?_md.nom:gv('nom'))+(_md?'_SIGNE':'')+'.pdf').replace(/\s/g,'-'));res=true}
+  }catch(err){saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});toast('Erreur PDF')}
+  // Restaurer
+  document.querySelectorAll('.modal,#toast,#sp').forEach(function(el){el.style.visibility='';});
+  if(iosOverlay)iosOverlay.style.display='';
+  if(!wCP)bCP.classList.remove('open');if(!wAB)bAB.classList.remove('open');
+  if(sh)sh.style.display='none';
+  return res;
+}
+
+function printPDF(){
+  var sh=ge('shield');if(sh)sh.style.display='none';
+  ge('bodyCP').classList.add('open');
+  ge('bodyABS').classList.add('open');
+  var saved=[];
+  document.querySelectorAll('input[type="date"]').forEach(function(el){
+    if(!el.value)return;saved.push({el:el,v:el.value});el.type='text';el.value=fD(el.value);
+  });
+  setTimeout(function(){
+    window.print();
+    setTimeout(function(){
+      saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v;});
+    },1000);
+  },150);
+}
+
+async function exportPDF(){
+  if(_isIOS){printPDF();return;}
+  spin('PDF...');await genPDF(false);unspin();
+}
+
+/* Emails RH par magasin */
+var RH_MAILS={
+  'Ango':'angers@groupe-edgard.com',
+  'Biarro':'biarritz@groupe-edgard.com',
+  'Bordo':'tours-bordo@groupe-edgard.com',
+  'Caenpo':'caen@groupe-edgard.com',
+  'Giro':'bordeaux@groupe-edgard.com',
+  'Havro':'lehavre@groupe-edgard.com',
+  'Jisam':'saintgermain@groupe-edgard.com',
+  'Lyono':'lyon@groupe-edgard.com',
+  'Manso':'lemans@groupe-edgard.com',
+  'Marseillo':'marseille@groupe-edgard.com',
+  'Nanceo':'nancy@groupe-edgard.com',
+  'Nanto':'nantes@groupe-edgard.com',
+  'Niceo':'nice@groupe-edgard.com',
+  'Orlo':'orleans@groupe-edgard.com',
+  'Reimo':'reims@groupe-edgard.com',
+  'Strabo':'strasbourg@groupe-edgard.com',
+  'Turo':'tours-marceau@groupe-edgard.com'
+};
+function getRhMail(societe){return RH_MAILS[societe]||'ressources-humaines@groupe-edgard.com';}
+async function doSendRH(){
+  var d=_md||{nom:gv('nom'),prenom:gv('prenom'),societe:gv('societe')};
+  var dn=gv('dirNom'),dp=gv('dirPrenom');
+  if(!dn||!dn.trim()||!dp||!dp.trim()){toast('Saisissez le nom et prenom du responsable');return;}
+  var dec=(document.querySelector('input[name="dec"]:checked')||{}).value||'';
+  if(!dec){toast('Cochez Autorise ou Refus');return;}
+  var sig=(dp&&dn)?dp+' '+dn:'';
+  var rhMail=getRhMail(d.societe);
+  // Format mailto correct : mailto:to?cc=...&subject=...&body=...
+  var ccPart=rhMail!=='ressources-humaines@groupe-edgard.com'?'cc='+encodeURIComponent(rhMail)+'&':'';
+  var subj=encodeURIComponent('[RH]['+d.societe+'] Demande - '+d.prenom+' '+d.nom);
+  var body='Bonjour,\n\nVeuillez trouver ci-dessous le lien pour telecharger la demande signee de '+d.prenom+' '+d.nom+' ('+d.societe+').\n\nCordialement,'+(sig?'\n'+sig:'');
+  if(_isIOS){
+    spin('Generation du lien...');
+    var rhData={
+      mode:'rh',
+      societe:d.societe,nom:d.nom,prenom:d.prenom,
+      date:d.date,tsC:d.tsC,ville:d.ville||getCity(d.societe)||'',
+      cp:d.cp,abs:d.abs,
+      sigStrokes:d.sigStrokes||null,
+      sigRStrokes:getSigRStrokes()||null,
+      dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM')
+    };
+    var base=(window.location.protocol==='https:')?window.location.href.split('?')[0].split('#')[0]:'https://edgard-opticiens.github.io/congespayes';
+    var encoded=encodeURIComponent(JSON.stringify(rhData));
+    var longUrl=base+'?r='+encoded;
+    function tryShorten2(url,cb){
+      var done=false;
+      var t=setTimeout(function(){if(!done){done=true;cb(url);}},4000);
+      fetch('https://is.gd/create.php?format=json&url='+encodeURIComponent(url))
+        .then(function(r){return r.json();})
+        .then(function(res){if(done)return;done=true;clearTimeout(t);cb((res&&res.shorturl)?res.shorturl:url);})
+        .catch(function(){
+          if(done)return;clearTimeout(t);
+          fetch('https://tinyurl.com/api-create.php?url='+encodeURIComponent(url))
+            .then(function(r){return r.text();})
+            .then(function(t2){done=true;cb((t2&&t2.startsWith('https'))?t2:url);})
+            .catch(function(){done=true;cb(url);});
+        });
+    }
+    tryShorten2(longUrl,function(rhUrl){
+      unspin();
+      var body2=body+'\n\nLien pour telecharger le PDF :\n\n'+rhUrl;
+      window.location.href='mailto:ressources-humaines@groupe-edgard.com?'+ccPart+'subject='+subj+'&body='+encodeURIComponent(body2);
+    });
+    return;
+  }
+  // PC
+  spin('Generation...');
+  var rhDataPC={
+    mode:'rh',
+    societe:d.societe,nom:d.nom,prenom:d.prenom,
+    date:d.date,tsC:d.tsC,ville:d.ville||getCity(d.societe)||'',
+    cp:d.cp,abs:d.abs,
+    sigStrokes:d.sigStrokes||null,
+    sigRStrokes:getSigRStrokes()||null,
+    dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM')
+  };
+  var basePC=(window.location.protocol==='https:')?window.location.href.split('?')[0].split('#')[0]:'https://edgard-opticiens.github.io/congespayes';
+  var longUrlPC=basePC+'?r='+encodeURIComponent(JSON.stringify(rhDataPC));
+  function shortenPC(url,cb){
+    var done=false;
+    var t=setTimeout(function(){if(!done){done=true;cb(url);}},4000);
+    fetch('https://is.gd/create.php?format=json&url='+encodeURIComponent(url))
+      .then(function(r){return r.json();})
+      .then(function(res){if(done)return;done=true;clearTimeout(t);cb((res&&res.shorturl)?res.shorturl:url);})
+      .catch(function(){
+        if(done)return;clearTimeout(t);
+        fetch('https://tinyurl.com/api-create.php?url='+encodeURIComponent(url))
+          .then(function(r){return r.text();})
+          .then(function(t2){done=true;cb((t2&&t2.startsWith('https'))?t2:url);})
+          .catch(function(){done=true;cb(url);});
+      });
+  }
+  shortenPC(longUrlPC,function(rhUrl){
+    unspin();
+    genPDF(true).then(function(blob){
+      if(blob){
+        var fn=('Demande_'+d.prenom+'_'+d.nom+'_SIGNE.pdf').replace(/\s/g,'-');
+        var burl=URL.createObjectURL(blob);
+        var a2=document.createElement('a');a2.href=burl;a2.download=fn;
+        document.body.appendChild(a2);a2.click();document.body.removeChild(a2);
+        setTimeout(function(){URL.revokeObjectURL(burl);},3000);
+      }
+      var bodyPC=body+'\n\nLien pour consulter la demande :\n\n'+rhUrl;
+      setTimeout(function(){window.location.href='mailto:ressources-humaines@groupe-edgard.com?'+ccPart+'subject='+subj+'&body='+encodeURIComponent(bodyPC);},600);
+    });
+  });
+}
+function openMailRH(){
+  var d=_md||{nom:gv('nom'),prenom:gv('prenom'),societe:gv('societe')};
+  var dn=gv('dirNom'),dp=gv('dirPrenom'),sig=(dp&&dn)?dp+' '+dn:'';
+  var body='Bonjour,\n\nVeuillez trouver en piece jointe la demande signee de '+d.prenom+' '+d.nom+' ('+d.societe+').\n\nCordialement,'+(sig?'\n'+sig:'');
+  var rhMail=getRhMail(d.societe);
+  var rhCc=rhMail!=='ressources-humaines@groupe-edgard.com'?'&cc='+encodeURIComponent(rhMail):'';
+  window.location.href='mailto:ressources-humaines@groupe-edgard.com'+rhCc+'?subject='+encodeURIComponent('[RH]['+d.societe+'] Demande de conges - '+d.prenom+' '+d.nom)+'&body='+encodeURIComponent(body);
+  setTimeout(function(){closeM('mdlRH');},600);
+}
+function nextDay(iso){var d=new Date(iso+'T00:00:00');d.setDate(d.getDate()+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function addOutlook(){
+  var d=_md;if(!d)return;
+  var dD,dF,lbl;
+  if(d.cp&&d.cp.on&&d.cp.d&&d.cp.f){dD=d.cp.d;dF=d.cp.f;lbl='CP';}
+  else if(d.abs&&d.abs.on&&d.abs.d&&d.abs.f){dD=d.abs.d;dF=d.abs.f;lbl=(d.abs.mL||'Absence').replace(/^[^\w]*/,'').trim();}
+  else{toast('Dates manquantes');return;}
+  var subj=(d.nom||'').toUpperCase()+' '+(d.prenom||'')+' - '+lbl+' du '+fD(dD)+' au '+fD(dF);
+  var desc='Demande validee par le responsable.';
+  // Fin = lendemain du dernier jour (format ICS journee entiere)
+  var dFend=nextDay(dF);
+  // Convertir date ISO en format ICS : YYYYMMDD
+  function toICS(iso){return iso.replace(/-/g,'');}
+  var uid=Date.now()+'@edgard-opticiens';
+  var now=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  var ics=[
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Edgard Opticiens//Conges//FR',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'UID:'+uid,
+    'DTSTAMP:'+now,
+    'DTSTART;VALUE=DATE:'+toICS(dD),
+    'DTEND;VALUE=DATE:'+toICS(dFend),
+    'SUMMARY:'+subj,
+    'DESCRIPTION:'+desc,
+    'TRANSP:OPAQUE',
+    'STATUS:CONFIRMED',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  // Télécharger le fichier ICS
+  var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download=('Conges_'+(d.nom||'')+'_'+(d.prenom||'')+'.ics').replace(/\s/g,'_');
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},3000);
+  toast('Fichier calendrier telecharge — ouvrez-le pour ajouter a votre agenda',5000);
+}
+function resetForm(){
+  if(!confirm('Reinitialiser ?'))return;
+  ['nom','prenom','cpD','cpF','absD','absF','absH','absJ','evtM','lienFam','refM','arDate'].forEach(function(id){var el=ge(id);if(el)el.value=''});
+  ge('societe').selectedIndex=0;updSoc();
+  document.querySelectorAll('input[type="radio"]').forEach(function(r){r.checked=false});
+  ge('jrN').textContent='-';ge('jrD').textContent='';
+  closeSec('CP');closeSec('ABS');showEvt(false);showDeces(false);if(ge('chkAR')){ge('chkAR').checked=false;toggleAR();}if(ge('mDec'))ge('mDec').checked=false;
+  clrCv('cvC');clrCv('cvR');
+  ge('calBox').style.display='none';ge('btnCal').style.display='none';
+  toast('Reinitialise');
+}
+/* Init */
+document.addEventListener('DOMContentLoaded',function(){
+  ge('today').textContent=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  // Lire ?d= (directeur) ou ?r= (RH) dans l'URL
+  var search=window.location.search;
+  var _rh=null;
+  if(search){
+    var m=search.match(/[?&]d=([^&]*)/);
+    if(m){var decoded=decodeHash(m[1]);if(decoded&&decoded.nom)_md=decoded;}
+    var mr=search.match(/[?&]r=([^&]*)/);
+    if(mr){try{_rh=JSON.parse(decodeURIComponent(mr[1]));}catch(e){_rh=null;}}
+  }
+  // Mode RH : affichage lecture seule + bouton télécharger PDF
+  if(_rh&&_rh.mode==='rh'){
+    ge('banner').className='banner bd2';
+    ge('badgeTxt').textContent='RH';
+    ge('bannerMsg').innerHTML='Demande signee — <button class="btn bgr" style="padding:6px 14px;font-size:12px" onclick="exportPDF()">Telecharger le PDF</button>';
+    ge('btnDir').style.display='none';ge('btnRH').style.display='none';ge('btnPDF').style.display='';
+      // Bouton ajustement RH
+      var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajuster dates/jours';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};ge('btnZone').insertBefore(adjBtn,ge('btnPDF'));
+    var sh=ge('shield');if(sh)sh.style.display='none';
+    var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='none';}
+    if(_rh.societe){ge('sdis').textContent=_rh.societe;ge('societe').value=_rh.societe;}
+    if(_rh.nom)ge('nom').value=_rh.nom;
+    if(_rh.prenom)ge('prenom').value=_rh.prenom;
+    if(_rh.cp&&_rh.cp.on){
+      openSec('CP');
+      if(_rh.cp.d){var elCpD=ge('cpD');if(elCpD){elCpD.type='text';elCpD.value=fD(_rh.cp.d);}}
+      if(_rh.cp.f){var elCpF=ge('cpF');if(elCpF){elCpF.type='text';elCpF.value=fD(_rh.cp.f);}}
+      if(_rh.cp.n)ge('jrN').textContent=_rh.cp.n;
+      if(_rh.cp.det)ge('jrD').textContent=_rh.cp.det;
+    }
+    if(_rh.abs&&_rh.abs.on){
+      openSec('ABS');
+      if(_rh.abs.m){var radio2=ge('m'+_rh.abs.m.charAt(0).toUpperCase()+_rh.abs.m.slice(1));if(radio2)radio2.checked=true;}
+      if(_rh.abs.evtM){ge('evtM').value=_rh.abs.evtM;showEvt(true);}if(_rh.abs.lienFam){ge('lienFam').value=_rh.abs.lienFam;showDeces(true);}
+      if(_rh.abs.d){var elD2=ge('absD');if(elD2){elD2.type='text';elD2.value=fD(_rh.abs.d);}}
+      if(_rh.abs.f){var elF2=ge('absF');if(elF2){elF2.type='text';elF2.value=fD(_rh.abs.f);}}
+      if(_rh.abs.h){var elH2=ge('absH');if(elH2){elH2.type='text';elH2.value=_rh.abs.h;}}
+      if(_rh.abs.j){var elJ2=ge('absJ');if(elJ2){elJ2.type='text';elJ2.value=_rh.abs.j;}}
+    }
+    // Signature collaborateur
+    var btnClrC2=ge('btnClrC');if(btnClrC2)btnClrC2.style.display='none';
+    var sigA=ge('sigCArea');
+    if(sigA&&_rh.sigStrokes&&_rh.sigStrokes.length){
+      var svgPaths='';
+      for(var si2=0;si2<_rh.sigStrokes.length;si2++){
+        var sk2=_rh.sigStrokes[si2];if(sk2.length<4)continue;
+        var dp2='M'+(sk2[0]/99*400).toFixed(1)+','+(sk2[1]/99*90).toFixed(1);
+        for(var pi2=2;pi2<sk2.length;pi2+=2)dp2+='L'+(sk2[pi2]/99*400).toFixed(1)+','+(sk2[pi2+1]/99*90).toFixed(1);
+        svgPaths+='<path d="'+dp2+'" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+      }
+      var svgW=document.createElement('div');svgW.style.cssText='width:100%;height:90px;background:#fff;';
+      svgW.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" style="display:block;width:100%;height:90px;background:#fff;">'+svgPaths+'</svg>';
+      sigA.appendChild(svgW);
+    }
+    // Signature directeur
+    var sigRA=ge('sigRArea');
+    if(sigRA&&_rh.sigRStrokes&&_rh.sigRStrokes.length){
+      var svgPathsR='';
+      for(var si3=0;si3<_rh.sigRStrokes.length;si3++){
+        var sk3=_rh.sigRStrokes[si3];if(!sk3||sk3.length<2)continue;
+        var dp3='M'+(sk3[0]/99*400).toFixed(1)+','+(sk3[1]/99*90).toFixed(1);
+        if(sk3.length>=4){for(var pi3=2;pi3<sk3.length;pi3+=2)dp3+='L'+(sk3[pi3]/99*400).toFixed(1)+','+(sk3[pi3+1]/99*90).toFixed(1);}
+        else dp3+='l0.5,0';
+        svgPathsR+='<path d="'+dp3+'" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+      }
+      var svgWR=document.createElement('div');svgWR.style.cssText='width:100%;height:90px;background:#fff;';
+      svgWR.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" style="display:block;width:100%;height:90px;background:#fff;">'+svgPathsR+'</svg>';
+      sigRA.appendChild(svgWR);
+    }
+    // Infos directeur
+    if(_rh.dirNom){var elDN=ge('dirNom');if(elDN){elDN.type='text';elDN.value=_rh.dirNom;}}
+    if(_rh.dirPrenom){var elDP=ge('dirPrenom');if(elDP){elDP.type='text';elDP.value=_rh.dirPrenom;}}
+    if(_rh.dec){var decRadio=document.querySelector('input[name="dec"][value="'+_rh.dec+'"]');if(decRadio)decRadio.checked=true;}
+    if(_rh.refM){var elRM=ge('refM');if(elRM)elRM.value=_rh.refM;}
+    if(_rh.tsR&&ge('tsR'))ge('tsR').textContent='Signe le '+_rh.tsR;
+    var city3=_rh.ville||getCity(_rh.societe)||'';
+    var elSV=ge('sigVille'),elSS=ge('sigSep'),elTod=ge('today'),elTsC2=ge('tsC');
+    if(city3){if(elSV)elSV.textContent='A '+city3;if(elSS)elSS.textContent=', ';}
+    if(_rh.date&&elTod)elTod.textContent=_rh.date;
+    if(_rh.tsC&&elTsC2)elTsC2.textContent='Signe le '+_rh.tsC;
+    // Rendre tout en lecture seule
+    document.querySelectorAll('input,select,textarea').forEach(function(el){el.setAttribute('readonly','');el.style.pointerEvents='none';});
+    return;
+  }
+  if(_md&&_md.nom&&_md.societe){
+    ge('banner').className='banner bd2';
+    ge('badgeTxt').textContent='Directeur';
+    ge('bannerMsg').innerHTML='Signez puis envoyez aux RH';
+    ge('btnDir').style.display='none';ge('btnRH').style.display='';
+    ge('btnPDF').textContent='PDF signe';
+    var sh=ge('shield');if(sh)sh.style.display='none';
+    var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='auto';}
+    // Remplir les données collaborateur
+    if(_md.societe){ge('sdis').textContent=_md.societe;ge('societe').value=_md.societe;}
+    if(_md.nom)ge('nom').value=_md.nom;
+    if(_md.prenom)ge('prenom').value=_md.prenom;
+    if(_md.cp&&_md.cp.on){
+      openSec('CP');
+      if(_md.cp.d){var elCpD=ge('cpD');if(elCpD){elCpD.type='text';elCpD.value=fD(_md.cp.d);}}
+      if(_md.cp.f){var elCpF=ge('cpF');if(elCpF){elCpF.type='text';elCpF.value=fD(_md.cp.f);}}
+      if(_md.cp.n)ge('jrN').textContent=_md.cp.n;
+      if(_md.cp.det)ge('jrD').textContent=_md.cp.det;
+    }
+    if(_md.abs&&_md.abs.on){
+      openSec('ABS');
+      if(_md.abs.m){var radio=ge('m'+_md.abs.m.charAt(0).toUpperCase()+_md.abs.m.slice(1));if(radio)radio.checked=true;}
+      if(_md.abs.evtM){ge('evtM').value=_md.abs.evtM;showEvt(true);}if(_md.abs.lienFam){ge('lienFam').value=_md.abs.lienFam;showDeces(true);}
+      if(_md.abs.d){var elD=ge('absD');if(elD){elD.type='text';elD.value=fD(_md.abs.d);}}
+      if(_md.abs.f){var elF=ge('absF');if(elF){elF.type='text';elF.value=fD(_md.abs.f);}}
+      if(_md.abs.h){var elH=ge('absH');if(elH){elH.type='text';elH.value=_md.abs.h;}}
+      if(_md.abs.j){var elJ=ge('absJ');if(elJ){elJ.type='text';elJ.value=_md.abs.j;}}
+    }
+    // Signature collaborateur — canvas blanc + redessiner les tracés
+    var btnClrC=ge('btnClrC');
+    if(btnClrC)btnClrC.style.display='none';
+    var sigArea2=ge('sigCArea');
+    if(sigArea2){
+      // SVG : jamais noir, jamais de canvas dans le DOM
+      var svgContent='';
+      if(_md.sigStrokes&&_md.sigStrokes.length){
+        var paths='';
+        for(var si=0;si<_md.sigStrokes.length;si++){
+          var sk=_md.sigStrokes[si];if(sk.length<4)continue;
+          var d='M'+(sk[0]/99*400).toFixed(1)+','+(sk[1]/99*90).toFixed(1);
+          for(var pi=2;pi<sk.length;pi+=2)d+='L'+(sk[pi]/99*400).toFixed(1)+','+(sk[pi+1]/99*90).toFixed(1);
+          paths+='<path d="'+d+'" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+        }
+        svgContent=paths;
+      }
+      var svgEl=document.createElement('div');
+      svgEl.style.cssText='width:100%;height:90px;background:#fff;';
+      svgEl.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" style="display:block;width:100%;height:90px;">'+svgContent+'</svg>';
+      sigArea2.appendChild(svgEl);
+    }
+    // Ville / date / horodatage (null-check car les IDs peuvent avoir été supprimés)
+    var city=_md.ville||getCity(_md.societe)||'';
+    var elSigVille=ge('sigVille'),elSigSep=ge('sigSep'),elToday=ge('today'),elTsC=ge('tsC');
+    if(city){if(elSigVille)elSigVille.textContent='A '+city;if(elSigSep)elSigSep.textContent=', ';}
+    if(_md.date&&elToday)elToday.textContent=_md.date;
+    if(_md.tsC&&elTsC)elTsC.textContent='Signe le '+_md.tsC;
+    // Agenda
+    var hasDates=!!(_md.cp&&_md.cp.on&&_md.cp.d&&_md.cp.f)||!!(_md.abs&&_md.abs.on&&_md.abs.d&&_md.abs.f);
+    if(hasDates){ge('calBox').style.display='block';ge('btnCal').style.display='';}
+    // Canvas directeur — SVG (jamais noir)
+    initSvgSignR(0);setTimeout(function(){initSvgSignR(0);},200);
+    // Champs collab en lecture seule
+    ['nom','prenom'].forEach(function(id){var el=ge(id);if(el)el.setAttribute('readonly','');});
+  } else {
+    // Mode collaborateur — SVG interactif (jamais noir sur iOS)
+    initSvgSign(0);
+  }
+});
+
+</script>
+<div id="rhAdjBox" style="display:none;max-width:900px;margin:10px auto 30px;background:#fff;border:2px solid var(--g);border-radius:8px;padding:14px 20px;box-shadow:0 4px 16px rgba(0,0,0,.1)">
+  <div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:10px">✏️ Ajustement RH — Dates et jours (réservé RH)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+    <div class="fg"><label class="lbl">Nouveau premier jour non travaillé</label><input class="inp" type="date" id="rhCpD"></div>
+    <div class="fg"><label class="lbl">Nouveau dernier jour non travaillé</label><input class="inp" type="date" id="rhCpF"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div class="fg"><label class="lbl">Heures d'absence</label><input class="inp" id="rhAbsH" placeholder="ex: 7h"></div>
+    <div class="fg"><label class="lbl">Nombre de jours</label><input class="inp" id="rhAbsJ" placeholder="ex: 1"></div>
+  </div>
+  <button class="btn bg" style="font-size:12px" onclick="applyRHAdj()">Appliquer les ajustements</button>
+</div>
+</body>
+</html>
