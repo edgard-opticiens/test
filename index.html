@@ -553,7 +553,7 @@ function drawStrokes(canvas,strokes){
 }
 
 /* Collecte */
-var _md=null,_dlN='',_rhN='';
+var _md=null,_dlN='',_rhN='',_rh=null;
 function collect(){
   var me=document.querySelector('input[name="motif"]:checked');
   return{
@@ -955,7 +955,7 @@ document.addEventListener('DOMContentLoaded',function(){
   ge('today').textContent=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
   // Lire ?d= (directeur) ou ?r= (RH) dans l'URL
   var search=window.location.search;
-  var _rh=null;
+  
   if(search){
     var m=search.match(/[?&]d=([^&]*)/);
     if(m){var decoded=decodeHash(m[1]);if(decoded&&decoded.nom)_md=decoded;}
