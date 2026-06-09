@@ -705,6 +705,29 @@ function openMailDir(){_ouvrirMailDir(_md||{},'');}
 
 var _isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+/* Convertit les zones SVG signature en canvas avant html2canvas (fix Edge) */
+function sigsToCanvas(){
+  var areas=[{id:'sigCArea',strokes:_rh?(_rh.sigStrokes||null):(_md?(_md.sigStrokes||null):null)},
+             {id:'sigRArea',strokes:_rh?(_rh.sigRStrokes||null):(getSigRStrokes())}];
+  var saved=[];
+  areas.forEach(function(a){
+    var area=ge(a.id);if(!area)return;
+    // Strokes : depuis la propriété live ou depuis les données sauvegardées
+    var strokes=(area._strokes&&area._strokes.length)?area._strokes:a.strokes;
+    if(!strokes||!strokes.length)return;
+    var c=document.createElement('canvas');c.width=400;c.height=90;
+    var ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,400,90);
+    ctx.strokeStyle='#1A1A1A';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
+    for(var i=0;i<strokes.length;i++){var s=strokes[i];if(!s||s.length<4)continue;ctx.beginPath();ctx.moveTo(s[0]/99*400,s[1]/99*90);for(var j=2;j<s.length;j+=2)ctx.lineTo(s[j]/99*400,s[j+1]/99*90);ctx.stroke();}
+    c.style.cssText='display:block;width:100%;height:90px;';
+    saved.push({area:area,html:area.innerHTML});
+    area.innerHTML='';area.appendChild(c);
+  });
+  return saved;
+}
+function sigsRestore(saved){
+  saved.forEach(function(s){s.area.innerHTML=s.html;});
+}
 async function genPDF(asBlob){
   if(_isIOS)return null;
   var bCP=ge('bodyCP'),bAB=ge('bodyABS');
@@ -728,10 +751,13 @@ async function genPDF(asBlob){
   // Nom pour le fichier PDF
   var pdfNom=_rh?_rh.nom:(_md?_md.nom:gv('nom'));
   var pdfPrenom=_rh?_rh.prenom:(_md?_md.prenom:gv('prenom'));
+  // Convertir SVG signatures en canvas (fix Edge/Firefox html2canvas)
+  var sigsSaved=sigsToCanvas();
   var res=null,errMsg=null;
   try{
-    var cv=await html2canvas(ge('wrap'),{scale:1.2,useCORS:true,logging:false,windowWidth:860});
+    var cv=await html2canvas(ge('wrap'),{scale:1.2,useCORS:true,allowTaint:false,logging:false,windowWidth:860});
     saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});saved=[];
+    sigsRestore(sigsSaved);
     var img=cv.toDataURL('image/jpeg',.88);
     var P=window.jspdf.jsPDF;
     var margin=4,pageW=210,pageH=297,maxW=pageW-2*margin,maxH=pageH-2*margin;
@@ -743,7 +769,8 @@ async function genPDF(asBlob){
     if(asBlob)res=pdf.output('blob');
     else{pdf.save(('Demande_'+pdfPrenom+'_'+pdfNom+'_SIGNE.pdf').replace(/\s/g,'-'));res=true;}
   }catch(err){errMsg='Erreur PDF';}
-  // Restaurer dans tous les cas (finally implicite)
+  // Restaurer dans tous les cas
+  sigsRestore(sigsSaved);
   saved.forEach(function(s){s.el.value='';s.el.type='date';s.el.value=s.v});
   document.querySelectorAll('.modal,#toast,#sp').forEach(function(el){el.style.visibility='';});
   adjPanels.forEach(function(el){if(el)el.style.visibility=''});
