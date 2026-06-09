@@ -291,12 +291,10 @@ function countJ(s,f){
   while(ws<=F){
     var r=0,rf=0,r5=0;
     for(var d=0;d<6;d++){var c=new Date(ws);c.setDate(ws.getDate()+d);if(c>=S&&c<=F){var k=c.getFullYear()*10000+(c.getMonth()+1)*100+c.getDate();r++;if(d<5)r5++;if(fy.has(k))rf++;}}
-    if(r===6){
-      // Semaine complète : ne déduire que les fériés lun-ven (pas samedi)
-      var rfLV=0;
-      for(var d2=0;d2<5;d2++){var c2=new Date(ws);c2.setDate(ws.getDate()+d2);var k2=c2.getFullYear()*10000+(c2.getMonth()+1)*100+c2.getDate();if(fy.has(k2))rfLV++;}
-      cp+=Math.max(0,5-rfLV);fe+=rfLV;
-    }else cp+=Math.max(0,r5-rf);fe+=(r===6?0:rf);
+    // r = jours lun-sam dans la plage, rf = fériés. Formule jours ouvrables 5/6.
+    // max(0, r-rf-1) pour r>=5 (semaine complète ou presque), max(0,r-rf) sinon.
+    var adj=(r>=5?1:0);
+    cp+=Math.max(0,r-rf-adj);fe+=rf;
     ws.setDate(ws.getDate()+7);
   }
   return{c:cp,fe:fe};
@@ -326,12 +324,13 @@ function showDeces(v){var dd=ge('decDet');if(dd){dd.style.display=v?'block':'non
 function toggleAR(){var cb=ge('chkAR');var box=ge('arDateBox');if(box)box.style.display=(cb&&cb.checked)?'flex':'none';}
 function applyRHAdj(){
   var cpD=gv('rhCpD'),cpF=gv('rhCpF'),absH=gv('rhAbsH'),absJ=gv('rhAbsJ');
-  if(cpD&&ge('cpD')){ge('cpD').type='text';ge('cpD').value=fD(cpD);}
-  if(cpF&&ge('cpF')){ge('cpF').type='text';ge('cpF').value=fD(cpF);}
+  function setRH(id,val){var el=ge(id);if(!el)return;el.removeAttribute('readonly');el.style.pointerEvents='auto';el.type='text';el.value=val;}
+  if(cpD)setRH('cpD',fD(cpD));
+  if(cpF)setRH('cpF',fD(cpF));
   if(cpD&&cpF){var r=countJ(cpD,cpF);ge('jrN').textContent=r.c;ge('jrD').textContent=r.fe?'dont '+r.fe+' jour(s) ferié(s)':'';ge('jrBlk').style.display='flex';}
-  if(absH&&ge('absH')){ge('absH').type='text';ge('absH').value=absH;}
-  if(absJ&&ge('absJ')){ge('absJ').type='text';ge('absJ').value=absJ;}
-  toast('Ajustements appliqués',3000);
+  if(absH)setRH('absH',absH);
+  if(absJ)setRH('absJ',absJ);
+  toast('Ajustements appliqués — pensez à télécharger le PDF mis à jour',4000);
 }
 function calcJ(){
   var d=gv('cpD'),f=gv('cpF');
@@ -481,6 +480,9 @@ function getSigRStrokes(){
 function isEmptyR(){
   var a=ge('sigRArea');return!a||!a._strokes||a._strokes.length===0;
 }
+function getSigRStrokes(){
+  var a=ge('sigRArea');return(a&&a._strokes&&a._strokes.length)?a._strokes:null;
+}
 function isEmpty(id){
   if(id==='cvC'||id==='sigCArea'){var a=ge('sigCArea');return!a||!a._strokes||a._strokes.length===0;}
   var c=ge(id);return!c||!c._strokes||c._strokes.length===0;
@@ -574,7 +576,7 @@ function buildDir(data){
     agUrl="https://outlook.office.com/calendar/action/compose?rru=addevent&startdt="+encodeURIComponent(dD+"T00:00:00")+"&enddt="+encodeURIComponent(dFx+"T00:00:00")+"&subject="+encodeURIComponent(sj)+"&allday=true";
     agH="<div style=\"margin-top:10px;padding:9px 12px;background:var(--gp);border:1.5px solid var(--g);border-radius:6px\"><div style=\"font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px\">Agenda Outlook</div><a href=\""+agUrl+"\" target=\"_blank\" style=\"display:inline-flex;align-items:center;padding:7px 14px;background:#1A1A1A;color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none\">Ouvrir dans Outlook</a></div>";
   }
-  var dJ=JSON.stringify({societe:data.societe,nom:data.nom,prenom:data.prenom,date:data.date,tsC:data.tsC,cp:data.cp,abs:data.abs,ville:city,agUrl:agUrl,rhMail:getRhMail(data.societe)});
+  var dJ=JSON.stringify({societe:data.societe,nom:data.nom,prenom:data.prenom,date:data.date,tsC:data.tsC,cp:data.cp,abs:data.abs,ville:city,agUrl:agUrl,rhMail:getRhMail(data.societe),annuleRemplace:data.annuleRemplace||null});
   var spCode="\n(function(W){\nfunction SP(c,o){\n  this.c=c;this.o=o||{};this._dr=false;this._empty=true;\n  this._cb=this.o.onBegin||function(){};this._init();\n}\nSP.prototype._init=function(){\n  var S=this,c=this.c,dpr=W.devicePixelRatio||1;\n  var pw=c.parentElement?c.parentElement.offsetWidth:c.offsetWidth||300;\n  var ph=parseInt(c.style.height)||110;\n  c.width=pw*dpr;c.height=ph*dpr;\n  c.style.width=pw+'px';c.style.height=ph+'px';\n  var ctx=c.getContext('2d');\n  ctx.scale(dpr,dpr);\n  ctx.fillStyle='#fff';ctx.fillRect(0,0,pw,ph);\n  ctx.strokeStyle=S.o.penColor||'#1A1A1A';\n  ctx.lineWidth=S.o.lineWidth||2.5;\n  ctx.lineCap='round';ctx.lineJoin='round';\n  S._ctx=ctx;\n  c.style.touchAction='none';\n  c.setAttribute('touch-action','none');\n  function xy(e){\n    var r=c.getBoundingClientRect();\n    var s=e.changedTouches?e.changedTouches[0]:e.touches?e.touches[0]:e;\n    return[s.clientX-r.left,s.clientY-r.top];\n  }\n  function dn(e){\n    try{e.preventDefault();}catch(x){}try{e.stopPropagation();}catch(x){}\n    S._dr=true;\n    if(S._empty){S._empty=false;S._cb();}\n    var p=xy(e);ctx.beginPath();ctx.moveTo(p[0],p[1]);\n  }\n  function mv(e){\n    try{e.preventDefault();}catch(x){}try{e.stopPropagation();}catch(x){}\n    if(!S._dr)return;\n    var p=xy(e);ctx.lineTo(p[0],p[1]);ctx.stroke();\n    ctx.beginPath();ctx.moveTo(p[0],p[1]);\n  }\n  function up(e){try{e.preventDefault();}catch(x){}S._dr=false;}\n  document.addEventListener('touchmove',function(e){if(S._dr)try{e.preventDefault();}catch(x){}},{passive:false});\n  if(W.PointerEvent){\n    c.addEventListener('pointerdown',function(e){try{c.setPointerCapture(e.pointerId);}catch(x){}dn(e);},{passive:false,capture:true});\n    c.addEventListener('pointermove',mv,{passive:false,capture:true});\n    c.addEventListener('pointerup',up,{passive:false});\n    c.addEventListener('pointercancel',up,{passive:false});\n  }\n  c.addEventListener('touchstart',dn,{passive:false,capture:true});\n  c.addEventListener('touchmove',mv,{passive:false,capture:true});\n  c.addEventListener('touchend',up,{passive:false,capture:true});\n  c.addEventListener('touchcancel',up,{passive:false});\n  c.addEventListener('mousedown',dn,false);\n  c.addEventListener('mousemove',mv,false);\n  c.addEventListener('mouseup',up,false);\n  c.addEventListener('mouseleave',up,false);\n};\nSP.prototype.clear=function(){\n  var c=this.c,dpr=W.devicePixelRatio||1;\n  this._ctx.clearRect(0,0,c.width/dpr,c.height/dpr);\n  this._empty=true;\n};\nSP.prototype.isEmpty=function(){return this._empty;};\nSP.prototype.toDataURL=function(){\n  var c=this.c,t=document.createElement('canvas');\n  t.width=c.width;t.height=c.height;\n  var x=t.getContext('2d');\n  x.fillStyle='#fff';x.fillRect(0,0,t.width,t.height);\n  x.drawImage(c,0,0);\n  return t.toDataURL('image/jpeg',0.85);\n};\nW.SigPad=SP;\n})(window);\n";
   var dirJs="var D="+dJ+";"+"var _tsR=\"\";var _sp=null;"+"function ge(i){return document.getElementById(i)}"+"function gv(i){var e=ge(i);return e?e.value:\"\"}"+"function fNow(){var d=new Date(),a=d.toLocaleDateString(\"fr-FR\",{day:\"2-digit\",month:\"2-digit\",year:\"numeric\"}),b=d.toLocaleTimeString(\"fr-FR\",{hour:\"2-digit\",minute:\"2-digit\"});return a+\" a \"+b}"+"function toast(m,ms){var t=ge(\"toast\");if(!t)return;t.textContent=m;t.classList.add(\"show\");setTimeout(function(){t.classList.remove(\"show\")},ms||3500)}"+"function spin(){var e=ge(\"sp\");if(e)e.classList.add(\"show\")}"+"function unspin(){var e=ge(\"sp\");if(e)e.classList.remove(\"show\")}"+"function clrSig(){if(_sp)_sp.clear();_tsR=\"\";var el=ge(\"tsR\");if(el)el.textContent=\"\"}"+"function initSig(){var c=ge(\"cvR\");if(!c||!window.SigPad){setTimeout(initSig,100);return}var pw=c.parentElement?c.parentElement.offsetWidth:0;if(pw<10){setTimeout(initSig,100);return}_sp=new SigPad(c,{penColor:\"#1A1A1A\",lineWidth:2.5,onBegin:function(){if(!_tsR){_tsR=fNow();var el=ge(\"tsR\");if(el)el.textContent=\"Signe le \"+_tsR}}})}"+"async function exportPDF(){var ov=document.querySelectorAll('[style*=\"position:fixed\"],[style*=\"border-radius:16px 16px 0 0\"]');var hid=[];ov.forEach(function(e){if(e.style.display!==\"none\"){hid.push({e:e,d:e.style.display});e.style.display=\"none\";}});spin();try{var cv=await html2canvas(ge(\"wrap\"),{scale:1.5,useCORS:true,logging:false,windowWidth:780});var img=cv.toDataURL(\"image/jpeg\",.88);var P=window.jspdf.jsPDF;var margin=6,pageW=210,pageH=297,maxW=pageW-2*margin,maxH=pageH-2*margin;var imgW=maxW,imgH=cv.height*imgW/cv.width;if(imgH>maxH){imgH=maxH;imgW=cv.width*imgH/cv.height;}var x=(pageW-imgW)/2,y=(pageH-imgH)/2;var pdf=new P({orientation:\"portrait\",unit:\"mm\",format:\"a4\"});pdf.addImage(img,\"JPEG\",x,y,imgW,imgH);pdf.save(\"Demande_\"+D.prenom+\"_\"+D.nom+\"_SIGNE.pdf\");}catch(e){}}hid.forEach(function(o){o.e.style.display=o.d;});unspin()}"+"async function sendRH(){var dn=gv(\"dirNom\"),dp=gv(\"dirPrenom\"),sig=(dp&&dn)?dp+\" \"+dn:\"\";await exportPDF();var body=\"Bonjour,\\n\\nVeuillez trouver en piece jointe la demande signee de \"+D.prenom+\" \"+D.nom+\" (\"+D.societe+\").\\n\\nCordialement,\"+(sig?\"\\n\"+sig:\"\");var rM_=D.rhMail||\\\"ressources-humaines@groupe-edgard.com\\\";var rCc_=rM_!==\\\"ressources-humaines@groupe-edgard.com\\\"?\\\"&cc=\\\"+encodeURIComponent(rM_):\\\"\\\";window.location.href=\\\"mailto:ressources-humaines@groupe-edgard.com\\\"+rCc_+\\\"?subject=\\\"+encodeURIComponent(\\\"[RH][\\\"+D.societe+\\\"] Demande \\\"+D.prenom+\\\" \\\"+D.nom)+\\\"&body=\\\"+encodeURIComponent(body);}"+"document.addEventListener(\"DOMContentLoaded\",initSig);window.addEventListener(\"load\",initSig);";
   var H="<!DOCTYPE html><html lang=\"fr\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">";
@@ -776,7 +778,8 @@ async function doSendRH(){
       cp:d.cp,abs:d.abs,
       sigStrokes:d.sigStrokes||null,
       sigRStrokes:getSigRStrokes()||null,
-      dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM')
+      dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM'),
+      annuleRemplace:d.annuleRemplace||null
     };
     var base=(window.location.protocol==='https:')?window.location.href.split('?')[0].split('#')[0]:'https://edgard-opticiens.github.io/congespayes';
     var encoded=encodeURIComponent(JSON.stringify(rhData));
@@ -811,7 +814,8 @@ async function doSendRH(){
     cp:d.cp,abs:d.abs,
     sigStrokes:d.sigStrokes||null,
     sigRStrokes:getSigRStrokes()||null,
-    dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM')
+    dirNom:dn,dirPrenom:dp,tsR:_tsR,dec:dec,refM:gv('refM'),
+    annuleRemplace:d.annuleRemplace||null
   };
   var basePC=(window.location.protocol==='https:')?window.location.href.split('?')[0].split('#')[0]:'https://edgard-opticiens.github.io/congespayes';
   var longUrlPC=basePC+'?r='+encodeURIComponent(JSON.stringify(rhDataPC));
@@ -929,6 +933,10 @@ document.addEventListener('DOMContentLoaded',function(){
       var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajuster dates/jours';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};ge('btnZone').insertBefore(adjBtn,ge('btnPDF'));
     var sh=ge('shield');if(sh)sh.style.display='none';
     var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='none';}
+    if(_rh.annuleRemplace){
+      var chkAR=ge('chkAR');if(chkAR){chkAR.checked=true;toggleAR();}
+      if(_rh.annuleRemplace.dateInit&&ge('arDate')){ge('arDate').value=_rh.annuleRemplace.dateInit;}
+    }
     if(_rh.societe){ge('sdis').textContent=_rh.societe;ge('societe').value=_rh.societe;}
     if(_rh.nom)ge('nom').value=_rh.nom;
     if(_rh.prenom)ge('prenom').value=_rh.prenom;
@@ -990,7 +998,7 @@ document.addEventListener('DOMContentLoaded',function(){
     if(_rh.date&&elTod)elTod.textContent=_rh.date;
     if(_rh.tsC&&elTsC2)elTsC2.textContent='Signe le '+_rh.tsC;
     // Rendre tout en lecture seule
-    document.querySelectorAll('input,select,textarea').forEach(function(el){el.setAttribute('readonly','');el.style.pointerEvents='none';});
+    document.querySelectorAll('#wrap input,#wrap select,#wrap textarea').forEach(function(el){el.setAttribute('readonly','');el.style.pointerEvents='none';});
     return;
   }
   if(_md&&_md.nom&&_md.societe){
