@@ -133,7 +133,7 @@ body{background:#fff;padding:0;}
   <span id="bannerMsg">Remplissez votre demande, signez, puis cliquez sur <strong>Envoyer au directeur</strong></span>
 </div>
 
-<div class="tb">
+<div class="tb" id="btnZone">
   <button class="btn bol" onclick="resetForm()">Reinitialiser</button>
   <button class="btn bdk" id="btnPDF" onclick="exportPDF()">PDF</button>
   <button class="btn bgr" id="btnRH" style="display:none" onclick="doSendRH()">Envoyer aux RH</button>
@@ -930,7 +930,7 @@ document.addEventListener('DOMContentLoaded',function(){
     ge('bannerMsg').innerHTML='Demande signee — <button class="btn bgr" style="padding:6px 14px;font-size:12px" onclick="exportPDF()">Telecharger le PDF</button>';
     ge('btnDir').style.display='none';ge('btnRH').style.display='none';ge('btnPDF').style.display='';
       // Bouton ajustement RH
-      var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajuster dates/jours';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};ge('btnZone').insertBefore(adjBtn,ge('btnPDF'));
+      var adjBtn=document.createElement('button');adjBtn.className='btn bol';adjBtn.textContent='✏️ Ajuster dates/jours';adjBtn.style.fontSize='12px';adjBtn.onclick=function(){var ab=ge('rhAdjBox');if(ab)ab.style.display=ab.style.display==='none'?'block':'none';};var _bz=ge('btnZone'),_bp=ge('btnPDF');if(_bz&&_bp)_bz.insertBefore(adjBtn,_bp);else if(_bz)_bz.appendChild(adjBtn);
     var sh=ge('shield');if(sh)sh.style.display='none';
     var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='none';}
     if(_rh.annuleRemplace){
@@ -1010,6 +1010,10 @@ document.addEventListener('DOMContentLoaded',function(){
     var sh=ge('shield');if(sh)sh.style.display='none';
     var db=ge('dirBlk');if(db){db.classList.remove('locked');db.style.pointerEvents='auto';}
     // Remplir les données collaborateur
+    if(_md.annuleRemplace){
+      var chkAR2=ge('chkAR');if(chkAR2){chkAR2.checked=true;toggleAR();}
+      if(_md.annuleRemplace.dateInit&&ge('arDate')){ge('arDate').value=_md.annuleRemplace.dateInit;}
+    }
     if(_md.societe){ge('sdis').textContent=_md.societe;ge('societe').value=_md.societe;}
     if(_md.nom)ge('nom').value=_md.nom;
     if(_md.prenom)ge('prenom').value=_md.prenom;
